@@ -1,0 +1,1487 @@
+<!DOCTYPE html><html lang="zh-CN" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>hide on bush | hide on bush</title><meta name="keywords" content="sryking"><meta name="author" content="sry king"><meta name="copyright" content="sry king"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="redis五大数据类型 redis键（key）常用命令   命令 注释    keys * 获取所有的key   select 0（库角标） 选择第几个库   move key 0（库角标） 将当前的数据库key移动到某个数据库,目标库有，则不能移动   flush 0（库角标） 清除指定库   randomkey 获取随机key   type key key的类型   set key value">
+<meta property="og:type" content="article">
+<meta property="og:title" content="hide on bush">
+<meta property="og:url" content="https://hu16839007.github.io.git/2021/06/11/redis/index.html">
+<meta property="og:site_name" content="hide on bush">
+<meta property="og:description" content="redis五大数据类型 redis键（key）常用命令   命令 注释    keys * 获取所有的key   select 0（库角标） 选择第几个库   move key 0（库角标） 将当前的数据库key移动到某个数据库,目标库有，则不能移动   flush 0（库角标） 清除指定库   randomkey 获取随机key   type key key的类型   set key value">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg">
+<meta property="article:published_time" content="2021-06-10T20:43:49.041Z">
+<meta property="article:modified_time" content="2021-05-17T04:54:42.000Z">
+<meta property="article:author" content="sry king">
+<meta property="article:tag" content="sryking">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg"><link rel="shortcut icon" href="https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=1611688293,2175392062&fm=26&gp=0.jpg"><link rel="canonical" href="https://hu16839007.github.io.git/2021/06/11/redis/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//fonts.googleapis.com" crossorigin=""/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script async="async" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script><script>(adsbygoogle = window.adsbygoogle || []).push({
+  google_ad_client: '',
+  enable_page_level_ads: 'true'
+});</script><link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Titillium+Web&amp;display=swap" media="print" onload="this.media='all'"><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: {"defaultEncoding":2,"translateDelay":0,"msgToTraditionalChinese":"繁","msgToSimplifiedChinese":"簡"},
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '天',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-05-17 12:54:42'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(win=>{
+    win.saveToLocal = {
+      set: function setWithExpiry(key, value, ttl) {
+        if (ttl === 0) return
+        const now = new Date()
+        const expiryDay = ttl * 86400000
+        const item = {
+          value: value,
+          expiry: now.getTime() + expiryDay,
+        }
+        localStorage.setItem(key, JSON.stringify(item))
+      },
+
+      get: function getWithExpiry(key) {
+        const itemStr = localStorage.getItem(key)
+
+        if (!itemStr) {
+          return undefined
+        }
+        const item = JSON.parse(itemStr)
+        const now = new Date()
+
+        if (now.getTime() > item.expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return item.value
+      }
+    }
+  
+    win.getScript = url => new Promise((resolve, reject) => {
+      const script = document.createElement('script')
+      script.src = url
+      script.async = true
+      script.onerror = reject
+      script.onload = script.onreadystatechange = function() {
+        const loadState = this.readyState
+        if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+        script.onload = script.onreadystatechange = null
+        resolve()
+      }
+      document.head.appendChild(script)
+    })
+  
+      win.activateDarkMode = function () {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      win.activateLightMode = function () {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+      const t = saveToLocal.get('theme')
+    
+          if (t === 'dark') activateDarkMode()
+          else if (t === 'light') activateLightMode()
+        
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        if (asideStatus === 'hide') {
+          document.documentElement.classList.add('hide-aside')
+        } else {
+          document.documentElement.classList.remove('hide-aside')
+        }
+      }
+    })(window)</script><meta name="generator" content="Hexo 5.4.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">加载中...</div></div></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=3862012102,3146387484&amp;fm=26&amp;gp=0.jpg" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">16</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">1</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/categories/"><div class="headline">分类</div><div class="length-num">1</div></a></div></div></div><hr/><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fa fa-list"></i><span> 清单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标题</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-heart"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heartbeat"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">hide on bush</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="javascript:void(0);"><i class="fa-fw fa fa-list"></i><span> 清单</span><i class="fas fa-chevron-down expand"></i></a><ul class="menus_item_child"><li><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></li><li><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标题</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-heart"></i><span> 友链</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heartbeat"></i><span> 关于</span></a></div></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">无题</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-06-10T20:43:49.041Z" title="发表于 2021-06-11 04:43:49">2021-06-11</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2021-05-17T04:54:42.000Z" title="更新于 2021-05-17 12:54:42">2021-05-17</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">字数总计:</span><span class="word-count">14.9k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">阅读时长:</span><span>49分钟</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="redis五大数据类型"><a href="#redis五大数据类型" class="headerlink" title="redis五大数据类型"></a>redis五大数据类型</h2><p><img src="https://img-blog.csdnimg.cn/20210127224920889.png"></p>
+<h2 id="redis键（key）"><a href="#redis键（key）" class="headerlink" title="redis键（key）"></a>redis键（key）</h2><h3 id="常用命令"><a href="#常用命令" class="headerlink" title="常用命令"></a>常用命令</h3><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>注释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>keys *</td>
+<td>获取所有的key</td>
+</tr>
+<tr>
+<td>select 0（库角标）</td>
+<td>选择第几个库</td>
+</tr>
+<tr>
+<td>move key 0（库角标）</td>
+<td>将当前的数据库key移动到某个数据库,目标库有，则不能移动</td>
+</tr>
+<tr>
+<td>flush 0（库角标）</td>
+<td>清除指定库</td>
+</tr>
+<tr>
+<td>randomkey</td>
+<td>获取随机key</td>
+</tr>
+<tr>
+<td>type key</td>
+<td>key的类型</td>
+</tr>
+<tr>
+<td>set key value</td>
+<td>设置key和value</td>
+</tr>
+<tr>
+<td>get key</td>
+<td>获取key的value</td>
+</tr>
+<tr>
+<td>mset key1 value1 key2 value2</td>
+<td>批量设置key、value</td>
+</tr>
+<tr>
+<td>mget key1 key2 key3</td>
+<td>批量获取value</td>
+</tr>
+<tr>
+<td>del key</td>
+<td>删除key</td>
+</tr>
+<tr>
+<td>exists key</td>
+<td>判断是否存在key</td>
+</tr>
+<tr>
+<td>expire key second（秒）</td>
+<td>给key设置过期时间</td>
+</tr>
+<tr>
+<td>pexpire key millisecond （毫秒）</td>
+<td>给key设置过期时间</td>
+</tr>
+<tr>
+<td>persist key</td>
+<td>删除过期时间，持久保存key</td>
+</tr>
+</tbody></table>
+<h2 id="String类型"><a href="#String类型" class="headerlink" title="String类型"></a>String类型</h2><h3 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h3><p>String是redis最基本的类型，你可以理解成与Memcached一模一样的类型，一个key对应一个value。</p>
+<p>String类型是二进制安全的。意思是redis的string可以包含任何数据。比如jpg图片或者序列化的对象 。</p>
+<p>String类型是Redis最基本的数据类型，一个redis中字符串value最多可以是<code>512M</code></p>
+<p>存储结构类似：<code>key:value</code></p>
+<h3 id="常用命令-1"><a href="#常用命令-1" class="headerlink" title="常用命令"></a>常用命令</h3><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>注释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>set key value</td>
+<td>设置值</td>
+</tr>
+<tr>
+<td>get key</td>
+<td>获取值</td>
+</tr>
+<tr>
+<td>getrange key start end</td>
+<td>获取指定范围的value</td>
+</tr>
+<tr>
+<td>getset key value</td>
+<td>设置新value，并返回旧value</td>
+</tr>
+<tr>
+<td>getbit key offset</td>
+<td>获取字符串中某个位置的字符</td>
+</tr>
+<tr>
+<td>mget key1 key2</td>
+<td>获取多个value</td>
+</tr>
+<tr>
+<td>setex key second（秒） value</td>
+<td>设置key、value，同时设置过期时间</td>
+</tr>
+<tr>
+<td>setnx key value</td>
+<td>key不存在时设置key</td>
+</tr>
+<tr>
+<td>setrange key offset value</td>
+<td>用新value替换老value部分字符，从offset开始替换</td>
+</tr>
+<tr>
+<td>strlen key</td>
+<td>获取value长度</td>
+</tr>
+<tr>
+<td>mset key1 value1 key2 value2</td>
+<td>批量设置key、value</td>
+</tr>
+<tr>
+<td>msetnx key1 value1 key2 value2</td>
+<td>批量设置，当且仅当所有要设置的key都不存在时</td>
+</tr>
+<tr>
+<td>psetex key milliseconds（毫秒） value</td>
+<td>设置过期时间，单位毫秒</td>
+</tr>
+<tr>
+<td>incr key</td>
+<td>如果value是数字，使用这个语法使数字自增1</td>
+</tr>
+<tr>
+<td>incrby key increment</td>
+<td>给value增加指定的值increment</td>
+</tr>
+<tr>
+<td>decr key</td>
+<td>给value减去1</td>
+</tr>
+<tr>
+<td>decrby key decrement</td>
+<td>给value减去指定的值decrement</td>
+</tr>
+<tr>
+<td>append key value</td>
+<td>将value追加到key原来的value尾部</td>
+</tr>
+</tbody></table>
+<h2 id="List类型"><a href="#List类型" class="headerlink" title="List类型"></a>List类型</h2><h3 id="简介-1"><a href="#简介-1" class="headerlink" title="简介"></a>简介</h3><p>它是一个字符串链表，left、right都可以插入添加；</p>
+<p>如果键不存在，创建新的链表；<br>如果键已存在，新增内容；<br>如果值全移除，对应的键也就消失了。</p>
+<p>链表的操作无论是头和尾效率都极高，但假如是对中间元素进行操作，效率就很惨淡了。</p>
+<p><code>key</code>是列表的名称，<code>value</code>是列表。</p>
+<p>存储结构类似：<code>key:[value1, value2, value3, value4]</code></p>
+<h3 id="常用命令-2"><a href="#常用命令-2" class="headerlink" title="常用命令"></a>常用命令</h3><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>注释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>blpop key timeout</td>
+<td>在timeout时间内，获取并移除列表的第一个元素</td>
+</tr>
+<tr>
+<td>brpop key1 timeout</td>
+<td>在timeout时间内，获取并移除列表的最后一个元素</td>
+</tr>
+<tr>
+<td>brpoplpush source destination timeout</td>
+<td>在timeout时间内，从source列表中取出一个值，放到destination列表中</td>
+</tr>
+<tr>
+<td>lindex key index</td>
+<td>获取列表index位置的值</td>
+</tr>
+<tr>
+<td>linsert key BEFORE</td>
+<td>AFTER value1 value2</td>
+</tr>
+<tr>
+<td>llen key</td>
+<td>返回列表的长度</td>
+</tr>
+<tr>
+<td>lpop key</td>
+<td>获取并移除列表的第一个元素</td>
+</tr>
+<tr>
+<td>lpush key value value2</td>
+<td>将一个或多个value插入到列表的头部</td>
+</tr>
+<tr>
+<td>lpushx key value</td>
+<td>当key已经存在的时候，向列表的头部插入value</td>
+</tr>
+<tr>
+<td>lrange key start end</td>
+<td>获取列表部分数据，从start到end范围</td>
+</tr>
+<tr>
+<td>lrem key count value</td>
+<td>count&gt;0，从列表的头部开始算起，移除count个value相同的数据；count&lt;0，从列表的尾部开始算起，移除count绝对值个value相同的数据；count=0，全部移除value相同的数据</td>
+</tr>
+<tr>
+<td>lset key index value</td>
+<td>在列表index位置设置value</td>
+</tr>
+<tr>
+<td>ltrim key start end</td>
+<td>保留start到end内的数据，其余的全部删除</td>
+</tr>
+<tr>
+<td>rpop key</td>
+<td>获取并移除列表最后一个元素</td>
+</tr>
+<tr>
+<td>rpoplpush source destination</td>
+<td>移除source列表最后一个元素，并把该元素添加到destination列表的头部</td>
+</tr>
+<tr>
+<td>RPUSH key value1 value2</td>
+<td>将一个或多个value添加到列表的尾部</td>
+</tr>
+<tr>
+<td>rpushx key value</td>
+<td>为已经存在的列表添加值</td>
+</tr>
+</tbody></table>
+<h2 id="Hash类型"><a href="#Hash类型" class="headerlink" title="Hash类型"></a>Hash类型</h2><h3 id="简介-2"><a href="#简介-2" class="headerlink" title="简介"></a>简介</h3><p>hash 是一个 string 类型的 field（字段） 和 value（值） 的映射表，hash 特别适合用于存储对象。</p>
+<p>存储结构类似：<code>key:&#123;field1:value1, field2:value2, field3:value3&#125;</code></p>
+<p>如：HMSET <code>keyName</code> <code>name</code> “redis tutorial” <code>description</code> “redis basic commands for caching”</p>
+<h3 id="常用命令-3"><a href="#常用命令-3" class="headerlink" title="常用命令"></a>常用命令</h3><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>注释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>hdel key field1 field2</td>
+<td>删除key中一个或多个field及value</td>
+</tr>
+<tr>
+<td>hexists key field</td>
+<td>查看哈希表key中，指定的field字段是否存在</td>
+</tr>
+<tr>
+<td>hget key field</td>
+<td>在key中查找filed字段的value值</td>
+</tr>
+<tr>
+<td>hgetall key</td>
+<td>获取在哈希表中指定 key 的所有字段和值</td>
+</tr>
+<tr>
+<td>hincrby key field increment</td>
+<td>为哈希表 key 中的指定字段的整数值加上增量increment</td>
+</tr>
+<tr>
+<td>hincrbyfloat key field increment</td>
+<td>为哈希表 key 中的指定字段的浮点数值加上增量 increment 。</td>
+</tr>
+<tr>
+<td>hkeys key</td>
+<td>获取所有哈希表中的字段</td>
+</tr>
+<tr>
+<td>hlen key</td>
+<td>获取哈希表中字段的数量</td>
+</tr>
+<tr>
+<td>hmget key field1 field2</td>
+<td>获取所有指定字段的值</td>
+</tr>
+<tr>
+<td>hmset key field1 value1 field2 value2</td>
+<td>同时将多个 field-value对设置到哈希表 key 中</td>
+</tr>
+<tr>
+<td>hset key field value</td>
+<td>将哈希表 key 中的字段 field 的值设为 value 。</td>
+</tr>
+<tr>
+<td>hsetnx key field value</td>
+<td>只有在字段 field 不存在时，设置哈希表字段的值。</td>
+</tr>
+<tr>
+<td>hvals key</td>
+<td>获取哈希表中所有值。</td>
+</tr>
+<tr>
+<td>hscan key cursor [MATCH pattern] [COUNT count]</td>
+<td>迭代哈希表中的键值对。</td>
+</tr>
+</tbody></table>
+<h2 id="set类型"><a href="#set类型" class="headerlink" title="set类型"></a>set类型</h2><h3 id="简介-3"><a href="#简介-3" class="headerlink" title="简介"></a>简介</h3><p>Redis 的 Set 是 String 类型的无序集合。集合成员是唯一的，这就意味着集合中不能出现重复的数据。</p>
+<p>Redis 中集合是通过哈希表实现的，所以添加，删除，查找的复杂度都是 O(1)。</p>
+<p>存储结构类似：<code>key:(&quot;value1&quot;, &quot;value2&quot;, &quot;value3&quot;)</code></p>
+<h3 id="常用命令-4"><a href="#常用命令-4" class="headerlink" title="常用命令"></a>常用命令</h3><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>注释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>sadd key value1 value2</td>
+<td>向集合添加一个或多个成员</td>
+</tr>
+<tr>
+<td>scard key</td>
+<td>获取集合的成员数大小</td>
+</tr>
+<tr>
+<td>sdiff key1 key2 key3</td>
+<td>返回第一个集合与其他集合之间的差异。</td>
+</tr>
+<tr>
+<td>sdiffstore destination key1 key2</td>
+<td>返回给定所有集合的差集并存储在 destination 新key中</td>
+</tr>
+<tr>
+<td>sinter key1 key2</td>
+<td>返回给定所有集合的交集</td>
+</tr>
+<tr>
+<td>sinterstore destination key1 key2</td>
+<td>返回给定所有集合的交集并存储在 destination 新key中</td>
+</tr>
+<tr>
+<td>sismember key value</td>
+<td>判断key的集合中是否存在value</td>
+</tr>
+<tr>
+<td>smembers key</td>
+<td>返回key集合中所有的value</td>
+</tr>
+<tr>
+<td>smove source destination value</td>
+<td>将 value 元素从 source的key 集合移动到 destination的key 集合中</td>
+</tr>
+<tr>
+<td>spop key</td>
+<td>随机获取并移除key中的一个value</td>
+</tr>
+<tr>
+<td>srandmember key count</td>
+<td>随机返回集合中count个value</td>
+</tr>
+<tr>
+<td>srem key value1 value2</td>
+<td>移除集合中一个或多个value</td>
+</tr>
+<tr>
+<td>sunion key1 key2</td>
+<td>返回所有给定集合的并集</td>
+</tr>
+<tr>
+<td>sunionstore destination key1 key2</td>
+<td>所有给定集合的并集存储在 destination key集合中</td>
+</tr>
+<tr>
+<td>SSCAN key cursor [MATCH pattern] [COUNT count]</td>
+<td>迭代集合中的元素</td>
+</tr>
+</tbody></table>
+<h3 id="Zset-sorted-set-类型"><a href="#Zset-sorted-set-类型" class="headerlink" title="Zset(sorted set)类型"></a>Zset(sorted set)类型</h3><h3 id="简介-4"><a href="#简介-4" class="headerlink" title="简介"></a>简介</h3><p>Redis 有序集合和集合一样也是string类型元素的集合,且不允许重复的成员。</p>
+<p>不同的是每个元素都会关联一个double类型的分数。redis正是通过分数来为集合中的成员进行从小到大的排序。</p>
+<p>有序集合的成员是唯一的,但分数(score)却可以重复。</p>
+<p>集合是通过哈希表实现的，所以添加，删除，查找的复杂度都是O(1)。 集合中最大的成员数为 232 - 1 (4294967295, 每个集合可存储40多亿个成员)。</p>
+<p>存储结构类似：<code>key:&#123;score1:value1, score2:value2, score3:value3, &#125;</code></p>
+<h3 id="常用命令-5"><a href="#常用命令-5" class="headerlink" title="常用命令"></a>常用命令</h3><table>
+<thead>
+<tr>
+<th>命令</th>
+<th>注释</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>zadd key score1 value1 score2 value2</td>
+<td>向有序集合添加一个或多个成员，或者更新已存在成员的分数</td>
+</tr>
+<tr>
+<td>zcard key</td>
+<td>获取有序集合的成员数</td>
+</tr>
+<tr>
+<td>zcount key min max</td>
+<td>计算在有序集合中指定区间分数的成员数</td>
+</tr>
+<tr>
+<td>zincrby key increment value</td>
+<td>有序集合中对指定成员的分数加上增量 increment</td>
+</tr>
+<tr>
+<td>zinterstore destination numkeys key [key …]</td>
+<td>计算给定的一个或多个有序集的交集并将结果集存储在新的有序集合 key 中</td>
+</tr>
+<tr>
+<td>zlexcount key min max</td>
+<td>在有序集合中计算指定字典区间内成员数量</td>
+</tr>
+<tr>
+<td>zrange key start stop [WITHSCORES]</td>
+<td>通过索引区间返回有序集合指定区间内的成员</td>
+</tr>
+<tr>
+<td>zrangebylex key min max [LIMIT offset count]</td>
+<td>通过字典区间返回有序集合的成员</td>
+</tr>
+<tr>
+<td>zrangebyscore key min max [WITHSCORES] [LIMIT]</td>
+<td>通过分数返回有序集合指定区间内的成员</td>
+</tr>
+<tr>
+<td>zrank key value</td>
+<td>返回有序集合中指定成员的索引</td>
+</tr>
+<tr>
+<td>zrem key value [value …]</td>
+<td>移除有序集合中的一个或多个成员</td>
+</tr>
+<tr>
+<td>zremrangebylex key min max</td>
+<td>移除有序集合中给定的字典区间的所有成员</td>
+</tr>
+<tr>
+<td>zremrangebyrank key start end</td>
+<td>移除有序集合中给定的排名区间的所有成员</td>
+</tr>
+<tr>
+<td>zremrangebyscore key min max</td>
+<td>移除有序集合中给定的分数区间的所有成员</td>
+</tr>
+<tr>
+<td>zrevrange key start stop [WITHSCORES]</td>
+<td>返回有序集中指定区间内的成员，通过索引，分数从高到低</td>
+</tr>
+<tr>
+<td>zrevrangebyscore key max min [WITHSCORES]</td>
+<td>返回有序集中指定分数区间内的成员，分数从高到低排序</td>
+</tr>
+<tr>
+<td>zrevrank key value</td>
+<td>返回有序集合中指定成员的排名，有序集成员按分数值递减(从大到小)排序</td>
+</tr>
+<tr>
+<td>zscore key value</td>
+<td>返回有序集中，成员的分数值</td>
+</tr>
+<tr>
+<td>zunionstore destination numkeys key [key …]</td>
+<td>计算给定的一个或多个有序集的并集，并存储在新的 key 中</td>
+</tr>
+<tr>
+<td>zscan key cursor [MATCH pattern] [COUNT count]</td>
+<td>迭代有序集合中的元素（包括元素成员和元素分值）</td>
+</tr>
+</tbody></table>
+<h2 id="Redis持久化两种方式"><a href="#Redis持久化两种方式" class="headerlink" title="Redis持久化两种方式"></a>Redis持久化两种方式</h2><p><img src="https://img-blog.csdnimg.cn/20210127225839437.png"></p>
+<h2 id="RDB持久化"><a href="#RDB持久化" class="headerlink" title="RDB持久化"></a>RDB持久化</h2><h3 id="RDB是什么"><a href="#RDB是什么" class="headerlink" title="RDB是什么"></a>RDB是什么</h3><p>RDB持久化的机制是在<code>一段时间内</code>达到<code>某修改次数</code>，就把内存数据快照Snapshot<code>持久化</code>到硬盘上，比如：配置1分钟内修改100次，达到这个条件时，就会进行持久化操作。RDB文件格式是<code>dump.rdb</code></p>
+<h3 id="如何配置"><a href="#如何配置" class="headerlink" title="如何配置"></a>如何配置</h3><p><img src="https://img-blog.csdnimg.cn/20210127225801367.png"></p>
+<p>即：在redis.conf文件里配置，截图上的save &lt;seconds&gt; &lt;changes&gt; </p>
+<p>如：save 1 100（一分钟内修改100次）</p>
+<p>如何停止：在redis.conf文件里配置<code>save &quot;&quot;</code>，或者通过命令<code>config set save &quot;&quot;</code></p>
+<h3 id="触发RDB几种方式"><a href="#触发RDB几种方式" class="headerlink" title="触发RDB几种方式"></a>触发RDB几种方式</h3><ul>
+<li><h4 id="自动触发"><a href="#自动触发" class="headerlink" title="自动触发"></a>自动触发</h4><blockquote>
+<p>就是上面说的redis.conf里的save配置</p>
+</blockquote>
+</li>
+<li><h4 id="手动触发"><a href="#手动触发" class="headerlink" title="手动触发"></a>手动触发</h4><blockquote>
+<p>执行<code>save</code>命令：save时只管保存，其它不管，全部阻塞</p>
+</blockquote>
+</li>
+</ul>
+<blockquote>
+<p>执行<code>bgsave</code>命令：Redis会在后台异步进行快照操作，<br>快照同时还可以响应客户端请求。可以通过lastsave<br>命令获取最后一次成功执行快照的时间</p>
+</blockquote>
+<blockquote>
+<p>执行<code>flushall</code>命令，也会产生dump.rdb文件，但里面是空的，无意义</p>
+</blockquote>
+<h3 id="持久化原理-fork"><a href="#持久化原理-fork" class="headerlink" title="持久化原理-fork"></a>持久化原理-fork</h3><p>Redis会单独创建（fork）一个子进程来进行持久化，会先将数据写入到<br>一个临时文件中，待持久化过程都结束了，再用这个临时文件替换上次持久化好的文件。</p>
+<p>整个过程中，主进程是不进行任何IO操作的，这就确保了极高的性能，如果需要进行大规模数据的恢复，且对于数据恢复的完整性不是非常敏感。</p>
+<p>那RDB方式要比AOF方式更加的高效。RDB的缺点是最后一次持久化后的数据可能丢失。</p>
+<p>Fork的作用是复制一个与当前进程一样的进程。新进程的所有数据（变量、环境变量、程序计数器等），数值都和原进程一致，但是是一个全新的进程，并作为原进程的子进程。</p>
+<h3 id="将持久化文件重新加载到内存中"><a href="#将持久化文件重新加载到内存中" class="headerlink" title="将持久化文件重新加载到内存中"></a>将持久化文件重新加载到内存中</h3><p>Redis是<code>基于内存</code>的，所以要将<code>硬盘</code>上的数据重新<code>加载到内存</code>中提供服务。</p>
+<ul>
+<li><p>将备份文件 (dump.rdb) 移动到 redis 安装目录并启动服务即可，redis就会自动加载文件数据至内存了。Redis 服务器在载入 RDB 文件期间，会一直处于阻塞状态，直到载入工作完成为止。</p>
+</li>
+<li><p>获取 redis 的安装目录可以使用 config get dir 命令</p>
+</li>
+</ul>
+<h3 id="RDB优势与劣势"><a href="#RDB优势与劣势" class="headerlink" title="RDB优势与劣势"></a>RDB优势与劣势</h3><h4 id="优势"><a href="#优势" class="headerlink" title="优势"></a>优势</h4><ul>
+<li><p>适合大规模的数据恢复</p>
+</li>
+<li><p>对数据完整性和一致性要求不高</p>
+</li>
+</ul>
+<h4 id="劣势"><a href="#劣势" class="headerlink" title="劣势"></a>劣势</h4><ul>
+<li><p>在一定间隔时间做一次备份，所以如果redis意外down掉的话，就会丢失最后一次快照后的所有修改。</p>
+</li>
+<li><p>Fork的时候，内存中的数据被<code>克隆</code>了一份，<code>大致2倍</code>的膨胀性能需要考虑</p>
+</li>
+</ul>
+<h3 id="RDB总结"><a href="#RDB总结" class="headerlink" title="RDB总结"></a>RDB总结</h3><p><img src="https://img-blog.csdnimg.cn/20210127225739269.png"></p>
+<h2 id="AOF持久化"><a href="#AOF持久化" class="headerlink" title="AOF持久化"></a>AOF持久化</h2><h3 id="AOF是什么"><a href="#AOF是什么" class="headerlink" title="AOF是什么"></a>AOF是什么</h3><p>Aof保存的是<code>appendonly.aof</code>文件，是将Redis所有的<code>写命令</code>（增删改）记录到这个日志文件中，<code>读命令</code>不记录。</p>
+<p>只允许在文件末尾追加内容，不允许改写文件。</p>
+<p>Redis启动的时候就会读取该文件，简而言之，就是将文件中的命令<code>重新执行</code>一遍，完成数据恢复到内存的工作。</p>
+<h3 id="如何配置-1"><a href="#如何配置-1" class="headerlink" title="如何配置"></a>如何配置</h3><p><img src="https://img-blog.csdnimg.cn/20210127225717481.png"></p>
+<p>即：在redis.conf文件里配置，截图上的改成<code>appendonly yes</code>。</p>
+<h4 id="持久化策略"><a href="#持久化策略" class="headerlink" title="持久化策略"></a>持久化策略</h4><p>通过Appendfsync配置</p>
+<ul>
+<li><p>Appendfsync Always</p>
+<blockquote>
+<p><code>每次发生</code>数据<code>变更</code>会被立即<code>记录</code>到磁盘，<code>性能较差</code>但<code>数据完整性比较好</code></p>
+</blockquote>
+</li>
+<li><p>Appendfsync Everysec</p>
+</li>
+</ul>
+<blockquote>
+<p>出厂默认推荐，异步操作，<code>每秒</code>记录，如果<code>一秒</code>内<code>宕机</code>，有数据<code>丢失</code></p>
+</blockquote>
+<h3 id="AOF启动-恢复-修复"><a href="#AOF启动-恢复-修复" class="headerlink" title="AOF启动/恢复/修复"></a>AOF启动/恢复/修复</h3><p>同样我们需要将AOF文件<code>加载</code>到<code>内存</code>中之后才能<code>使用</code>，如果<code>AOF</code>文件被<code>破坏</code>了，我们该如何<code>修复</code>呢？</p>
+<ul>
+<li><p>正常恢复到内存中</p>
+<blockquote>
+<p>将有数据的aof文件复制一份保存到对应目录，目录路径可以通过<code>config get dir</code>命令获取，重新启动Redis就可以了</p>
+</blockquote>
+</li>
+<li><p>异常恢复文件到内存中</p>
+<blockquote>
+<p>备份异常AOF文件，使用命令对文件进行修复：<code>redis-check-aof --fix 文件名</code>，然后重新启动Redis就可以了</p>
+</blockquote>
+</li>
+</ul>
+<h3 id="Rewrite重写AOF文件"><a href="#Rewrite重写AOF文件" class="headerlink" title="Rewrite重写AOF文件"></a>Rewrite重写AOF文件</h3><h4 id="什么是Rewrite"><a href="#什么是Rewrite" class="headerlink" title="什么是Rewrite"></a>什么是Rewrite</h4><blockquote>
+<p>AOF采用<code>文件追加</code>方式，文件会<code>越来越大</code>为避免出现此种情况，新增了重写机制。</p>
+</blockquote>
+<blockquote>
+<p>当AOF<code>文件的大小</code>超过所设定的<code>阈值</code>时，Redis就会<code>启动</code>AOF文件的内容<code>压缩</code>，只保留可以恢复数据的<code>最小指令集</code>.可以使用命令<code>bgrewriteaof</code>进行重写文件</p>
+</blockquote>
+<h4 id="Rewrite原理"><a href="#Rewrite原理" class="headerlink" title="Rewrite原理"></a>Rewrite原理</h4><blockquote>
+<p>AOF文件持续增长而过大时，会fork出一条<code>新进程</code>来将文件重写(也是先写临时文件最后再rename)。</p>
+</blockquote>
+<blockquote>
+<p>遍历<code>新进程</code>的内存中数据，每条记录有一条的Set语句。重写aof文件的操作，并没有读取旧的aof文件。</p>
+</blockquote>
+<blockquote>
+<p>而是将整个内存中的数据库内容用命令的方式重写了一个<code>新的aof</code>文件，这点和快照有点类似</p>
+</blockquote>
+<h4 id="触发重写机制"><a href="#触发重写机制" class="headerlink" title="触发重写机制"></a>触发重写机制</h4><blockquote>
+<p>Redis会记录上次重写时的AOF大小，默认配置是当AOF文件大小是上次rewrite后大小的一倍，且文件大于64M时触发</p>
+</blockquote>
+<h3 id="AOF优势-劣势"><a href="#AOF优势-劣势" class="headerlink" title="AOF优势/劣势"></a>AOF优势/劣势</h3><h4 id="优势-1"><a href="#优势-1" class="headerlink" title="优势"></a>优势</h4><ul>
+<li><p>每次修改同步：appendfsync always同步持久化，每次发生数据变更会被立即记录到磁盘，性能较差但数据完整性比较好</p>
+</li>
+<li><p>每秒同步：appendfsync everysec异步操作，每秒记录，如果一秒内宕机，仅一秒内的数据丢失</p>
+</li>
+</ul>
+<h4 id="劣势-1"><a href="#劣势-1" class="headerlink" title="劣势"></a>劣势</h4><ul>
+<li><p>相同数据集的数据而言aof文件要远大于rdb文件，恢复速度慢于rdb</p>
+</li>
+<li><p>Aof运行效率要慢于rdb,每秒同步策略效率较好，不同步效率和rdb相同</p>
+</li>
+</ul>
+<h3 id="AOF总结"><a href="#AOF总结" class="headerlink" title="AOF总结"></a>AOF总结</h3><p><img src="https://img-blog.csdnimg.cn/20210127225621155.png"></p>
+<h2 id="哨兵简介"><a href="#哨兵简介" class="headerlink" title="哨兵简介"></a>哨兵简介</h2><p><img src="https://img-blog.csdnimg.cn/20210127230255517.png"></p>
+<p><code>Sentinel</code>（哨兵）是Redis<code>高可用</code>的解决方案，可以运行多个Sentinel组成一个哨兵分布式系统。</p>
+<p>这里我们的<code>哨兵机制</code>就是解决这个问题：<code>故障转移</code>，如果主节点挂掉，就进行<code>主从切换</code>，让从节点<code>升级</code>为主节点，继续对外提供服务。</p>
+<p>使用流言协议(gossip protocols)来接收主机<code>是否下线</code>；并使用投票协议(agreement protocols)来决定是否执行<code>自动故障迁移</code>； 以及选择哪个从服务器作为<code>新的主服务器</code>。</p>
+<h4 id="Sentinel哨兵职责如下："><a href="#Sentinel哨兵职责如下：" class="headerlink" title="Sentinel哨兵职责如下："></a>Sentinel哨兵职责如下：</h4><ul>
+<li><p><code>监控</code>(Monitoring)：Sentinel 会不断地定期检查你的主服务器和从服务器是否运作正常。</p>
+</li>
+<li><p><code>提醒</code>(Notification): 当被监控的某个 Redis 服务器出现问题时， Sentinel 可以通过 API 向管理员或者其他应用程序发送通知。</p>
+</li>
+<li><p><code>自动故障迁移</code>(Automaticfailover): 当一个主服务器<code>不能正常工作</code>时， Sentinel 会开始一次<code>自动故障迁移</code>操作，它会将失效主服务器的其中一个从服务器<code>升级</code>为新的主服务器，并让失效主服务器的其他从服务器改为复制新的主服务器; 当<code>客户端</code>试图连接失效的主服务器时，集群也会向客户端返回新主服务器的地址， 使得集群可以使用新主服务器代替失效服务器。</p>
+</li>
+<li><p><code>统一的配置管理</code>：连接者询问sentinel取得主从的地址。</p>
+</li>
+</ul>
+<h2 id="哨兵搭建"><a href="#哨兵搭建" class="headerlink" title="哨兵搭建"></a>哨兵搭建</h2><h3 id="机器准备"><a href="#机器准备" class="headerlink" title="机器准备"></a>机器准备</h3><p><code>主从复制</code>的搭建，之前的文章讲过了，大家可以去参考</p>
+<table>
+<thead>
+<tr>
+<th>服务器名称</th>
+<th>节点类型</th>
+<th>IP地址</th>
+<th>端口</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Node1</td>
+<td>Redis服务1(主节点Master)</td>
+<td>192.168.14.101</td>
+<td>6379</td>
+</tr>
+<tr>
+<td>Node2</td>
+<td>Redis服务2(从节点slave1)</td>
+<td>192.168.14.102</td>
+<td>6380</td>
+</tr>
+<tr>
+<td>Node3</td>
+<td>Redis服务3(从节点slave2)</td>
+<td>192.168.14.103</td>
+<td>6381</td>
+</tr>
+<tr>
+<td>Sentinel1</td>
+<td>哨兵服务1</td>
+<td>192.168.14.101</td>
+<td>26379</td>
+</tr>
+<tr>
+<td>Sentinel2</td>
+<td>哨兵服务2</td>
+<td>192.168.14.102</td>
+<td>26380</td>
+</tr>
+<tr>
+<td>Sentinel3</td>
+<td>肖兵服务3</td>
+<td>192.168.14.103</td>
+<td>26381</td>
+</tr>
+</tbody></table>
+<h3 id="五个主要配置讲解"><a href="#五个主要配置讲解" class="headerlink" title="五个主要配置讲解"></a>五个主要配置讲解</h3><p>在每个主从Redis目录下新建一个名为sentinel.conf的文件，在该文件下配置如下命令。</p>
+<p><code>命令总格式</code>：sentinel <option_name> <master_name> <option_value></p>
+<h4 id="一：配置sentinel监控master"><a href="#一：配置sentinel监控master" class="headerlink" title="一：配置sentinel监控master"></a>一：配置sentinel监控master</h4><p><code>示例</code>：sentinel monitor mymaster 127.0.0.1 6380 1</p>
+<p><code>详解</code>：sentinel监控的master的名字叫做mymaster，地址为127.0.0.1:6380；sentinel在集群中，需要多个sentinel互相沟通来确认某个master是否真的死了；数字1代表，当集群中有1个sentinel认为master死了时，才能真正认为该master已经不可用了。</p>
+<h4 id="二：配置sentinel心跳"><a href="#二：配置sentinel心跳" class="headerlink" title="二：配置sentinel心跳"></a>二：配置sentinel心跳</h4><p><code>示例</code>：sentinel down-after-milliseconds mymaster 5000</p>
+<p><code>详解</code>：sentinel向master发送心跳PING，确认master是否存活，如果master在<code>down-after-milliseconds</code>时间（单位毫秒）范围内没有给sentinel回应<code>PONG</code>，或者回复一个错误消息，那么sentinel就主观的认为这个master不可用了</p>
+<h4 id="三：配置主从切换时，同步新master的salve个数"><a href="#三：配置主从切换时，同步新master的salve个数" class="headerlink" title="三：配置主从切换时，同步新master的salve个数"></a>三：配置主从切换时，同步新master的salve个数</h4><p><code>示例</code>：sentinel parallel-syncs mymaster 1</p>
+<p><code>详解</code>：在发生failover主备切换时，这个选项指定了最多可以有多少个slave同时对新的master进行同步数据。这个数字越小，完成failover所需的时间就越长，但是如果这个数字越大，就意味着越多的slave因为replication而不可用。可以设为 1 来保证每次只有一个slave处于不能处理命令请求的状态</p>
+<h4 id="四：配置故障转移最大时间"><a href="#四：配置故障转移最大时间" class="headerlink" title="四：配置故障转移最大时间"></a>四：配置故障转移最大时间</h4><p><code>示例</code>：sentinel failover-timeout mymaster 60000（毫秒）</p>
+<p><code>详解</code>：若Sentinel进程在该配置值内未能完成故障转移的操作，则认为本次故障转移操作失败。</p>
+<h4 id="五：配置报警脚本"><a href="#五：配置报警脚本" class="headerlink" title="五：配置报警脚本"></a>五：配置报警脚本</h4><p><code>示例</code>：sentinel notification-script mymaster <script-path></p>
+<p><code>详解</code>：Sentinel检测到Master主服务器异常时，所要调用的报警脚本。</p>
+<h3 id="sentinel配置文件示例"><a href="#sentinel配置文件示例" class="headerlink" title="sentinel配置文件示例"></a>sentinel配置文件示例</h3><p>大家按照这个配置，分别给3个sentinel节点进行配置</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"># 哨兵sentinel实例运行的端口 默认26379</span><br><span class="line">port 26379</span><br><span class="line"></span><br><span class="line">#以守护进程模式启动</span><br><span class="line">daemonize yes</span><br><span class="line"></span><br><span class="line"># 哨兵sentinel的工作目录</span><br><span class="line">dir &#x2F;tmp</span><br><span class="line"></span><br><span class="line">#日志文件名</span><br><span class="line">logfile &quot;sentinel_26379.log&quot;</span><br><span class="line"></span><br><span class="line"># sentinel监控的master主机</span><br><span class="line">sentinel monitor mymaster 192.168.1.108 6379 2</span><br><span class="line"></span><br><span class="line"># sentinel连接主从密码验证，注意必须为主从设置一样的密码</span><br><span class="line"># sentinel auth-pass &lt;master-name&gt; &lt;password&gt;</span><br><span class="line">sentinel auth-pass mymaster 1234</span><br><span class="line"></span><br><span class="line"># 指定多少毫秒之后 主节点没有应答哨兵sentinel 此时 哨兵主观上认为主节点下线 默认30秒</span><br><span class="line">sentinel down-after-milliseconds mymaster 30000</span><br><span class="line"></span><br><span class="line">sentinel parallel-syncs mymaster 1</span><br><span class="line"></span><br><span class="line"># 失效转移最大时间设置</span><br><span class="line">sentinel failover-timeout mymaster 180000</span><br><span class="line"></span><br><span class="line">#如果了这个脚本路径，那么必须保证这个脚本存在于这个路径，并且是可执行的，否则sentinel无法正常启动成功。</span><br><span class="line">sentinel notification-script mymaster &#x2F;var&#x2F;redis&#x2F;notify.sh  </span><br></pre></td></tr></table></figure>
+
+<h3 id="启动sentinel"><a href="#启动sentinel" class="headerlink" title="启动sentinel"></a>启动sentinel</h3><p><code>方式1</code>：redis-sentinel redis-sentinel.conf</p>
+<p><code>方式2</code>：redis-server sentinel.conf –sentinel</p>
+<h3 id="验证主从切换"><a href="#验证主从切换" class="headerlink" title="验证主从切换"></a>验证主从切换</h3><p>kill掉master主节点，模拟主机出现故障</p>
+<p><img src="https://img-blog.csdnimg.cn/20210127230144868.png"></p>
+<p>上面截图红框框住的几个重要信息，这里先介绍最后一行，<code>switch-master mymaster</code> 192.168.14.101 6379 192.168.14.103 6381，表示master服务器由<code>6379</code>切换为<code>6381</code>端口的redis服务器。</p>
+<p><code>PS:+switch-master</code> 表示切换主节点</p>
+<h4 id="查看6381端口Redis服务器"><a href="#查看6381端口Redis服务器" class="headerlink" title="查看6381端口Redis服务器"></a>查看6381端口Redis服务器</h4><p>通过命令info replication查看，我们发现,6381的Redis服务已经切换成master节点了. </p>
+<p>另外，也可以查看sentinel.conf 配置文件，里面的 sentinel monitor mymaster 192.168.14.101 6379 2 也自动更改为6381了</p>
+<p><img src="https://img-blog.csdnimg.cn/20210127230110302.png"></p>
+<p>至此，哨兵模式搭建验证完成。</p>
+<h2 id="Redis主从复制"><a href="#Redis主从复制" class="headerlink" title="Redis主从复制"></a>Redis主从复制</h2><h3 id="概念"><a href="#概念" class="headerlink" title="概念"></a>概念</h3><p>Redis的主从复制概念和MySQL的主从复制大概类似。一台<code>主机master</code>，一台<code>从机slaver</code>。master主机数据更新后根据配置和策略，自动同步到slaver从机，Master以<code>写为主</code>，Slave以<code>读为主</code>。</p>
+<p><img src="https://img-blog.csdnimg.cn/20210127230837106.png"></p>
+<h4 id="主要用途"><a href="#主要用途" class="headerlink" title="主要用途"></a>主要用途</h4><ul>
+<li><p><code>读写分离</code>：适用于读多写少的应用，增加多个从机，提高读的速度，提高程序并发</p>
+</li>
+<li><p><code>数据容灾恢复</code>：从机复制主机的数据，相当于数据备份，如果主机数据丢失，那么可以通过从机存储的数据进行恢复。</p>
+</li>
+<li><p><code>高并发、高可用集群实现的基础</code>：在高并发的场景下，就算主机挂了，从机可以进行<code>主从切换</code>，从机自动成为主机对外提供服务。</p>
+</li>
+</ul>
+<h3 id="一主多从配置"><a href="#一主多从配置" class="headerlink" title="一主多从配置"></a>一主多从配置</h3><p><img src="https://img-blog.csdnimg.cn/20210127230811137.png"></p>
+<h4 id="环境准备"><a href="#环境准备" class="headerlink" title="环境准备"></a>环境准备</h4><p>老哥太穷了，就用一台机器模拟三个机器。</p>
+<ul>
+<li><p><code>第一步：</code>将redis.conf复制3份，分别是redis6379.conf、redis6380.conf、redis6381.conf</p>
+</li>
+<li><p><code>第二步：</code> 修改三个redis.conf文件里的port端口、pid文件名、日志文件名、rdb文件名</p>
+</li>
+<li><p><code>第三步：</code> 分别打开三个窗口模拟三台服务器，并开启redis服务。</p>
+</li>
+</ul>
+<h4 id="查看当前3台机器主从角色"><a href="#查看当前3台机器主从角色" class="headerlink" title="查看当前3台机器主从角色"></a>查看当前3台机器主从角色</h4><p>先用命令<code>info replication</code>看看3台机器目前的<code>角色</code>是什么。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"># 三台机器都是这个状态</span><br><span class="line">127.0.0.1:6379&gt; info replication</span><br><span class="line"># 角色是master主机</span><br><span class="line">role:master</span><br><span class="line"># 从机个数为0</span><br><span class="line">connected_slaves:0</span><br></pre></td></tr></table></figure>
+
+<h4 id="设置主从关系"><a href="#设置主从关系" class="headerlink" title="设置主从关系"></a>设置主从关系</h4><p>这里注意，我们只设置从机就可以了，不用设置主机。我们选择<code>6380</code>和<code>6381</code>作为<code>从机</code>。<code>6379</code>作为<code>主机</code>。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"># 6380 端口</span><br><span class="line">127.0.0.1:6380&gt; SLAVEOF 127.0.0.1 6379</span><br><span class="line"></span><br><span class="line"># 6381 端口</span><br><span class="line">127.0.0.1:6381&gt; SLAVEOF 127.0.0.1 6379</span><br></pre></td></tr></table></figure>
+
+<h4 id="再次查看3台机器目前角色"><a href="#再次查看3台机器目前角色" class="headerlink" title="再次查看3台机器目前角色"></a>再次查看3台机器目前角色</h4><p>再次执行命令：<code>info replication</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"># 主机</span><br><span class="line">127.0.0.1:6379&gt; info replication</span><br><span class="line">role:master # 角色：主机</span><br><span class="line">connected_slaves:2 #连接的从机个数，以及从机IP和端口</span><br><span class="line">slave0:ip&#x3D;127.0.0.1,port&#x3D;6380,state&#x3D;online,offset&#x3D;98,lag&#x3D;1</span><br><span class="line">slave1:ip&#x3D;127.0.0.1,port&#x3D;6381,state&#x3D;online,offset&#x3D;98,lag&#x3D;1</span><br><span class="line"></span><br><span class="line"># 从机1</span><br><span class="line">127.0.0.1:6380&gt; info replication</span><br><span class="line">role:slave # 角色：从机</span><br><span class="line">master_host:127.0.0.1 # 主机的IP和端口</span><br><span class="line">master_port:6379</span><br><span class="line"></span><br><span class="line"># 从机2</span><br><span class="line">127.0.0.1:6381&gt; info replication</span><br><span class="line">role:slave # 角色：从机</span><br><span class="line">master_host:127.0.0.1 # 主机的IP和端口</span><br><span class="line">master_port:6379</span><br></pre></td></tr></table></figure>
+
+<h4 id="搭建成功，试验一把"><a href="#搭建成功，试验一把" class="headerlink" title="搭建成功，试验一把"></a>搭建成功，试验一把</h4><ul>
+<li><p><code>全量复制：</code> 从机会把主机之前的数据全部都同步过来，大家可以在从机上get 某key试试。</p>
+</li>
+<li><p><code>增量复制：</code> 当主机新增数据时，从机会将该新增数据同步过来，大家可以在主机上执行命令set key value，然后在从机上get 该key，看是否能获取到。</p>
+</li>
+</ul>
+<h4 id="读写分离"><a href="#读写分离" class="headerlink" title="读写分离"></a>读写分离</h4><p>Redis的从机<code>默认</code>不允许进行<code>写操作</code>，大家可以在从机上执行命令<code>set key value</code>，会报错。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"># 6380从机</span><br><span class="line">127.0.0.1:6380&gt; set k3 v3</span><br><span class="line">(error) READONLY You can&#39;t write against a read only slave.</span><br></pre></td></tr></table></figure>
+
+<h3 id="主从复制原理"><a href="#主从复制原理" class="headerlink" title="主从复制原理"></a>主从复制原理</h3><p><img src="https://img-blog.csdnimg.cn/20210127230730365.png"></p>
+<h4 id="全量复制"><a href="#全量复制" class="headerlink" title="全量复制"></a>全量复制</h4><p><img src="https://img-blog.csdnimg.cn/20210127230644869.png"></p>
+<p><strong>①</strong>slave发送psync，由于是第一次复制，不知道master的runid，自然也不知道offset，所以发送psync ？ -1</p>
+<p><strong>②</strong>master收到请求，发送master的runid和offset给从节点。</p>
+<p><strong>③</strong>从节点slave保存master的信息</p>
+<p><strong>④</strong>主节点bgsave保存rdb文件</p>
+<p><strong>⑤</strong>主机点发送rdb文件</p>
+<p>并且在<strong>④</strong>和<strong>⑤</strong>的这个过程中产生的数据，会写到复制缓冲区repl_back_buffer之中去。</p>
+<p><strong>⑥</strong>主节点发送上面两个步骤产生的buffer到从节点slave</p>
+<p><strong>⑦</strong>从节点清空原来的数据，如果它之前有数据，那么久会清空数据</p>
+<p><strong>⑧</strong>从节点slave把rdb文件的数据装载进自身。</p>
+<h4 id="全量复制的开销"><a href="#全量复制的开销" class="headerlink" title="全量复制的开销"></a>全量复制的开销</h4><p><strong>①</strong>bgsave时间</p>
+<p><strong>②</strong>rdb文件网络传输时间</p>
+<p><strong>③</strong>从节点清空数据的</p>
+<p><strong>④</strong>从节点加载rdb的时间</p>
+<p><strong>⑤</strong>可能的aof重写时间，这是针对从节点，例如开启了aof之后，从节点添加buffer数据时候，可能需要aof重写</p>
+<p>基于上面的原因，有的情况下不适合使用全量复制，例如网络抖动之后，从节点只需要传送一部分数据，不需要传送全部数据，<code>redis2.8</code>之后实现了部分复制功能</p>
+<h4 id="部分复制"><a href="#部分复制" class="headerlink" title="部分复制"></a>部分复制</h4><p><img src="https://img-blog.csdnimg.cn/20210127230613452.png"></p>
+<p><strong>①</strong>假设发送网络抖动或者别的情况，暂时失去了连接</p>
+<p><strong>②</strong>这个时候，master还在继续往buffer里面写数据</p>
+<p><strong>③</strong>slave重新连接上了master</p>
+<p><strong>④</strong>slave向master发送自己的offset和runid</p>
+<p><strong>⑤</strong>master判断slave的offset是否在buffer的队列里面，如果是，那就返回continue给slave，否则需要进行全量复制（因为这说明已经错过了很多数据了）</p>
+<p><strong>⑥</strong>master发送从slave的offset开始到缓冲区队列结尾的数据给slave</p>
+<h2 id="为什么要用-redis-？为什么要用缓存？"><a href="#为什么要用-redis-？为什么要用缓存？" class="headerlink" title="为什么要用 redis ？为什么要用缓存？"></a>为什么要用 redis ？为什么要用缓存？</h2><p>高性能：</p>
+<p>假如用户第一次访问数据库中的某些数据。这个过程会比较慢，因为是从硬盘上读取的。将该用户访问的数据存在缓存中，这样下一次再访问这些数据的时候就可以直接从缓存中获取了。操作缓存就是直接操作内存，所以速度相当快。如果数据库中的对应数据改变的之后，同步改变缓存中相应的数据即可！</p>
+<p>高并发：</p>
+<p>直接操作缓存能够承受的请求是远远大于直接访问数据库的，所以我们可以考虑把数据库中的部分数据转移到缓存中去，这样用户的一部分请求会直接到缓存这里而不用经过数据库。</p>
+<h2 id="为什么要用-redis-而不用-map-guava-做缓存"><a href="#为什么要用-redis-而不用-map-guava-做缓存" class="headerlink" title="为什么要用 redis 而不用 map/guava 做缓存?"></a>为什么要用 redis 而不用 map/guava 做缓存?</h2><p>缓存分为本地缓存和分布式缓存。以 Java 为例，使用自带的 map 或者 guava 实现的是本地缓存，最主要的特点是轻量以及快速，生命周期随着 jvm 的销毁而结束，并且在多实例的情况下，每个实例都需要各自保存一份缓存，缓存不具有一致性。</p>
+<p>使用 redis 或 memcached 之类的称为分布式缓存，在多实例的情况下，各实例共用一份缓存数据，缓存具有一致性。缺点是需要保持 redis 或 memcached服务的高可用，整个程序架构上较为复杂。</p>
+<h2 id="redis-的线程模型是怎么样的？"><a href="#redis-的线程模型是怎么样的？" class="headerlink" title="redis 的线程模型是怎么样的？"></a>redis 的线程模型是怎么样的？</h2><p>redis 内部使用文件事件处理器 file event handler，这个文件事件处理器是单线程的，所以 redis 才叫做单线程的模型。它采用 IO 多路复用机制同时监听多个 socket，根据 socket 上的事件来选择对应的事件处理器进行处理。</p>
+<p>文件事件处理器的结构包含 4 个部分：</p>
+<ul>
+<li><p>多个 socket</p>
+</li>
+<li><p>IO 多路复用程序</p>
+</li>
+<li><p>文件事件分派器</p>
+</li>
+<li><p>事件处理器（连接应答处理器、命令请求处理器、命令回复处理器）<br>多个 socket 可能会并发产生不同的操作，每个操作对应不同的文件事件，但是 IO 多路复用程序会监听多个 socket，会将 socket 产生的事件放入队列中排队，事件分派器每次从队列中取出一个事件，把该事件交给对应的事件处理器进行处理。</p>
+</li>
+</ul>
+<h2 id="redis-和-memcached-的区别？"><a href="#redis-和-memcached-的区别？" class="headerlink" title="redis 和 memcached 的区别？"></a>redis 和 memcached 的区别？</h2><p>存储方式不同：memcache 把数据全部存在内存之中，断电后会挂掉，数据不能超过内存大小；Redis 有部份存在硬盘上，这样能保证数据的持久性。</p>
+<p>数据支持类型：memcache 对数据类型支持相对简单；Redis 有复杂的数据类型。</p>
+<p>使用底层模型不同：它们之间底层实现方式，以及与客户端之间通信的应用协议不一样，Redis 自己构建了 vm 机制，因为一般的系统调用系统函数的话，会浪费一定的时间去移动和请求。 value 值大小不同：Redis 最大可以达到 1gb；memcache 只有 1mb。</p>
+<h2 id="如何实现-redis-事务？"><a href="#如何实现-redis-事务？" class="headerlink" title="如何实现 redis 事务？"></a>如何实现 redis 事务？</h2><p>Redis 通过 MULTI、EXEC、WATCH 等命令来实现事务(transaction)功能。事务提供了一种将多个命令请求打包，然后一次性、按顺序地执行多个命令的机制，并且在事务执行期间，服务器不会中断事务而改去执行其他客户端的命令请求，它会将事务中的所有命令都执行完毕，然后才去处理其他客户端的命令请求。</p>
+<p>在传统的关系式数据库中，常常用 ACID 性质来检验事务功能的可靠性和安全性。在 Redis 中，事务总是具有原子性（Atomicity）、一致性（Consistency）和隔离性（Isolation），并且当 Redis 运行在某种特定的持久化模式下时，事务也具有持久性（Durability）。</p>
+<h2 id="什么是-RedLock？"><a href="#什么是-RedLock？" class="headerlink" title="什么是 RedLock？"></a>什么是 RedLock？</h2><p>获取当前时间（start）。</p>
+<p>依次向 N 个 Redis节点请求锁。请求锁的方式与从单节点 Redis获取锁的方式一致。为了保证在某个 Redis节点不可用时该算法能够继续运行，获取锁的操作都需要设置超时时间，需要保证该超时时间远小于锁的有效时间。这样才能保证客户端在向某个 Redis节点获取锁失败之后，可以立刻尝试下一个节点。</p>
+<p>计算获取锁的过程总共消耗多长时间（consumeTime = end - start）。如果客户端从大多数 Redis节点（&gt;= N/2 + 1) 成功获取锁，并且获取锁总时长没有超过锁的有效时间，这种情况下，客户端会认为获取锁成功，否则，获取锁失败。</p>
+<p>如果最终获取锁成功，锁的有效时间应该重新设置为锁最初的有效时间减去 consumeTime。</p>
+<p>如果最终获取锁失败，客户端应该立刻向所有 Redis节点发起释放锁的请求。</p>
+<h2 id="说说-Redis-都有哪些应用场景？"><a href="#说说-Redis-都有哪些应用场景？" class="headerlink" title="说说 Redis 都有哪些应用场景？"></a>说说 Redis 都有哪些应用场景？</h2><p><code>缓存</code>：这应该是 Redis 最主要的功能了，也是大型网站必备机制，合理地使用缓存不仅可以加 快数据的访问速度，而且能够有效地降低后端数据源的压力。</p>
+<p><code>共享Session</code>：对于一些依赖 session 功能的服务来说，如果需要从单机变成集群的话，可以选择 redis 来统一管理 session。</p>
+<p><code>消息队列系统</code>：消息队列系统可以说是一个大型网站的必备基础组件，因为其具有业务 解耦、非实时业务削峰等特性。Redis提供了发布订阅功能和阻塞队列的功 能，虽然和专业的消息队列比还不够足够强大，但是对于一般的消息队列功 能基本可以满足。比如在分布式爬虫系统中，使用 redis 来统一管理 url队列。</p>
+<p><code>分布式锁</code>：在分布式服务中。可以利用Redis的setnx功能来编写分布式的锁，虽然这个可能不是太常用。 当然还有诸如排行榜、点赞功能都可以使用 Redis 来实现，但是 Redis 也不是什么都可以做，比如数据量特别大时，不适合 Redis，我们知道 Redis 是基于内存的，虽然内存很便宜，但是如果你每天的数据量特别大，比如几亿条的用户行为日志数据，用 Redis 来存储的话，成本相当的高。</p>
+<h2 id="单线程的-Redis-为什么这么快？"><a href="#单线程的-Redis-为什么这么快？" class="headerlink" title="单线程的 Redis 为什么这么快？"></a>单线程的 Redis 为什么这么快？</h2><p>Redis 有多快？官方给出的答案是读写速度 10万/秒，如果说这是在单线程情况下跑出来的成绩，你会不会惊讶？为什么单线程的 Redis 速度这么快？原因有以下几点：</p>
+<p>纯内存操作：</p>
+<ul>
+<li><p>Redis 是完全基于内存的，所以读写效率非常的高，当然 Redis 存在持久化操作，在持久化操作是都是 fork 子进程和利用 Linux 系统的页缓存技术来完成，并不会影响 Redis 的性能。 </p>
+</li>
+<li><p>单线程操作：单线程并不是坏事，单线程可以避免了频繁的上下文切换，频繁的上下文切换也会影响性能的。 </p>
+</li>
+<li><p>合理高效的数据结构 </p>
+</li>
+<li><p>采用了非阻塞 I/O 多路复用机制：多路I/O复用模型是利用 select、poll、epoll 可以同时监察多个流的 I/O 事件的能力，在空闲的时候，会把当前线程阻塞掉，当有一个或多个流有 I/O 事件时，就从阻塞态中唤醒，于是程序就会轮询一遍所有的流（epoll 是只轮询那些真正发出了事件的流），并且只依次顺序的处理就绪的流，这种做法就避免了大量的无用操作。</p>
+</li>
+</ul>
+<h2 id="说一说-Redis-的数据过期淘汰策略？"><a href="#说一说-Redis-的数据过期淘汰策略？" class="headerlink" title="说一说 Redis 的数据过期淘汰策略？"></a>说一说 Redis 的数据过期淘汰策略？</h2><p>Redis 中数据过期策略采用定期删除+惰性删除策略。</p>
+<h3 id="1、定期删除、惰性删除策略是什么？"><a href="#1、定期删除、惰性删除策略是什么？" class="headerlink" title="1、定期删除、惰性删除策略是什么？"></a>1、定期删除、惰性删除策略是什么？</h3><ul>
+<li><p><code>定期删除策略</code>：Redis 启用一个定时器定时监视所有的 key，判断key是否过期，过期的话就删除。这种策略可以保证过期的 key 最终都会被删除，但是也存在严重的缺点：每次都遍历内存中所有的数据，非常消耗 CPU 资源，并且当 key 已过期，但是定时器还处于未唤起状态，这段时间内 key 仍然可以用。 </p>
+</li>
+<li><p><code>惰性删除策略</code>：在获取 key 时，先判断 key 是否过期，如果过期则删除。这种方式存在一个缺点：如果这个 key 一直未被使用，那么它一直在内存中，其实它已经过期了，会浪费大量的空间。 </p>
+</li>
+</ul>
+<h3 id="2、定期删除-惰性删除策略是如何工作的？"><a href="#2、定期删除-惰性删除策略是如何工作的？" class="headerlink" title="2、定期删除+惰性删除策略是如何工作的？"></a>2、定期删除+惰性删除策略是如何工作的？</h3><p>这两种策略天然的互补，结合起来之后，定时删除策略就发生了一些改变，不在是每次扫描全部的 key 了，而是随机抽取一部分 key 进行检查，这样就降低了对 CPU 资源的损耗，惰性删除策略互补了为检查到的key，基本上满足了所有要求。</p>
+<p>但是有时候就是那么的巧，既没有被定时器抽取到，又没有被使用，这些数据又如何从内存中消失？没关系，还有内存淘汰机制，当内存不够用时，内存淘汰机制就会上场。Redis 内存淘汰机制有以下几种策略：</p>
+<ul>
+<li><p>volatile-lru：从已设置过期时间的数据集（server.db[i].expires）中挑选最近最少使用的数据淘汰</p>
+</li>
+<li><p>volatile-ttl：从已设置过期时间的数据集（server.db[i].expires）中挑选将要过期的数据淘汰</p>
+</li>
+<li><p>volatile-random：从已设置过期时间的数据集（server.db[i].expires）中任意选择数据淘汰</p>
+</li>
+<li><p>allkeys-lru：当内存不足以容纳新写入数据时，在键空间中，移除最近最少使用的key（这个是最常用的）</p>
+</li>
+<li><p>allkeys-random：从数据集（server.db[i].dict）中任意选择数据淘汰</p>
+</li>
+<li><p>no-eviction：禁止驱逐数据，永不过期，也就是说当内存不足以容纳新写入数据时，新写入操作会报错。这个应该没人使用吧！（默认值）</p>
+</li>
+</ul>
+<p><strong>4.0版本后增加以下两种：</strong></p>
+<ul>
+<li><p>volatile-lfu：从已设置过期时间的数据集(server.db[i].expires)中挑选最不经常使用的数据淘汰</p>
+</li>
+<li><p>allkeys-lfu：当内存不足以容纳新写入数据时，在键空间中，移除最不经常使用的key</p>
+</li>
+</ul>
+<h2 id="手写一个-LRU-算法"><a href="#手写一个-LRU-算法" class="headerlink" title="手写一个 LRU 算法"></a>手写一个 LRU 算法</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">LRUCache</span>&lt;<span class="title">K</span>, <span class="title">V</span>&gt; <span class="keyword">extends</span> <span class="title">LinkedHashMap</span>&lt;<span class="title">K</span>, <span class="title">V</span>&gt; </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">final</span> <span class="keyword">int</span> CACHE_SIZE;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 传递进来最多能缓存多少数据</span></span><br><span class="line"><span class="comment">     *</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> cacheSize 缓存大小</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">LRUCache</span><span class="params">(<span class="keyword">int</span> cacheSize)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// true 表示让 linkedHashMap 按照访问顺序来进行排序，最近访问的放在头部，最老访问的放在尾部。</span></span><br><span class="line">        <span class="keyword">super</span>((<span class="keyword">int</span>) Math.ceil(cacheSize / <span class="number">0.75</span>) + <span class="number">1</span>, <span class="number">0.75f</span>, <span class="keyword">true</span>);</span><br><span class="line">        CACHE_SIZE = cacheSize;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">protected</span> <span class="keyword">boolean</span> <span class="title">removeEldestEntry</span><span class="params">(Map.Entry&lt;K, V&gt; eldest)</span> </span>&#123;</span><br><span class="line">        <span class="comment">// 当 map中的数据量大于指定的缓存个数的时候，就自动删除最老的数据。</span></span><br><span class="line">        <span class="keyword">return</span> size() &gt; CACHE_SIZE;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="jedis-和-Redisson-有哪些区别？"><a href="#jedis-和-Redisson-有哪些区别？" class="headerlink" title="jedis 和 Redisson 有哪些区别？"></a>jedis 和 Redisson 有哪些区别？</h2><p>jedis：提供了比较全面的 Redis 命令的支持。</p>
+<p>Redisson：实现了分布式和可扩展的 Java 数据结构，与 jedis 相比 Redisson 的功能相对简单，不支持排序、事务、管道、分区等 Redis 特性。</p>
+<h2 id="请问Redis的rehash怎么做的，为什么要渐进rehash，渐进rehash又是怎么实现的"><a href="#请问Redis的rehash怎么做的，为什么要渐进rehash，渐进rehash又是怎么实现的" class="headerlink" title="请问Redis的rehash怎么做的，为什么要渐进rehash，渐进rehash又是怎么实现的?"></a>请问Redis的rehash怎么做的，为什么要渐进rehash，渐进rehash又是怎么实现的?</h2><p>因为redis是单线程，当K很多时，如果一次性将键值对全部rehash，庞大的计算量会影响服务器性能，甚至可能会导致服务器在一段时间内停止服务。不可能一步完成整个rehash操作，所以redis是分多次、渐进式的rehash。渐进性哈希分为两种：</p>
+<p><strong>1）操作redis时，额外做一步rehash</strong></p>
+<p>对redis做读取、插入、删除等操作时，会把位于table[dict-&gt;rehashidx]位置的链表移动到新的dictht中，然后把rehashidx做加一操作，移动到后面一个槽位。</p>
+<p><strong>2）后台定时任务调用rehash</strong></p>
+<p>后台定时任务rehash调用链，同时可以通过server.hz控制rehash调用频率</p>
+<h2 id="请问Redis的数据类型底层怎么实现"><a href="#请问Redis的数据类型底层怎么实现" class="headerlink" title="请问Redis的数据类型底层怎么实现?"></a>请问Redis的数据类型底层怎么实现?</h2><p>1）字符串：整数值、embstr编码的简单动态字符串、简单动态字符串（SDS)</p>
+<p>2）列表：压缩列表、双端链表</p>
+<p>3）哈希：压缩列表、字典</p>
+<p>4）集合：整数集合、字典</p>
+<p>5）有序集合：压缩列表、跳跃表和字典</p>
+<h2 id="动态字符串SDS"><a href="#动态字符串SDS" class="headerlink" title="动态字符串SDS"></a>动态字符串SDS</h2><p>SDS是”simple dynamic string”的缩写。 redis中所有场景中出现的字符串，基本都是由SDS来实现的</p>
+<ul>
+<li>所有非数字的key。例如set msg “hello world” 中的key msg.</li>
+<li>字符串数据类型的值。例如`` set msg “hello world”中的msg的值”hello wolrd”</li>
+<li>非字符串数据类型中的“字符串值”。例如RPUSH fruits “apple” “banana” “cherry”中的”apple” “banana” “cherry”</li>
+</ul>
+<p><strong>SDS长这样：</strong></p>
+<p><img src="https://img-blog.csdnimg.cn/20210127231343543.png"></p>
+<ul>
+<li>free:还剩多少空间 </li>
+<li>len:字符串长度 </li>
+<li>buf:存放的字符数组</li>
+</ul>
+<p><strong>空间预分配</strong></p>
+<p>为减少修改字符串带来的内存重分配次数，sds采用了“一次管够”的策略：</p>
+<ul>
+<li>若修改之后sds长度小于1MB,则多分配现有len长度的空间</li>
+<li>若修改之后sds长度大于等于1MB，则扩充除了满足修改之后的长度外，额外多1MB空间</li>
+</ul>
+<p><strong>惰性空间释放</strong></p>
+<p>为避免缩短字符串时候的内存重分配操作，sds在数据减少时，并不立刻释放空间。</p>
+<h2 id="双向链表"><a href="#双向链表" class="headerlink" title="双向链表"></a>双向链表</h2><p><img src="https://img-blog.csdnimg.cn/20210127231738933.png"></p>
+<p>分两部分，一部分是“统筹部分”：橘黄色，</p>
+<p>一部分是“具体实施方“：蓝色。</p>
+<p>主体”统筹部分“：</p>
+<ul>
+<li>head指向具体双向链表的头</li>
+<li>tail指向具体双向链表的尾</li>
+<li>len双向链表的长度</li>
+</ul>
+<p>具体”实施方”：一目了然的双向链表结构，有前驱pre有后继next</p>
+<p>由list和listNode两个数据结构构成。</p>
+<h2 id="ziplist"><a href="#ziplist" class="headerlink" title="ziplist"></a>ziplist</h2><p>压缩列表。 redis的列表键和哈希键的底层实现之一。此数据结构是为了节约内存而开发的。</p>
+<p>和各种语言的数组类似，它是由连续的内存块组成的，这样一来，由于内存是连续的，就减少了很多内存碎片和指针的内存占用，进而节约了内存。</p>
+<p><img src="https://img-blog.csdnimg.cn/20210127231856265.png"></p>
+<p>然后文中的entry的结构是这样的：</p>
+<p><img src="https://img-blog.csdnimg.cn/20210127231924589.png"></p>
+<p>元素的遍历</p>
+<p><img src="https://user-gold-cdn.xitu.io/2019/12/2/16ec2447c53c3024?imageslim"></p>
+<p>然后再根据ziplist节点元素中的previous_entry_length属性，来逐个遍历:</p>
+<p><img src="https://user-gold-cdn.xitu.io/2019/12/2/16ec2449a7dc6360?imageslim"></p>
+<p><strong>连锁更新</strong></p>
+<p>再次看看entry元素的结构，有一个previous_entry_length字段，他的长度要么都是1个字节，要么都是5个字节：</p>
+<ul>
+<li>前一节点的长度小于254字节，则previous_entry_length长度为1字节</li>
+<li>前一节点的长度大于254字节，则previous_entry_length长度为5字节</li>
+</ul>
+<p>假设现在存在一组压缩列表，长度都在250字节至253字节之间，突然新增一新节点new， 长度大于等于254字节，会出现：</p>
+<p><img src="https://user-gold-cdn.xitu.io/2019/12/2/16ec2449a7fb8404?imageslim"></p>
+<p>程序需要不断的对压缩列表进行空间重分配工作，直到结束。</p>
+<p>除了增加操作，删除操作也有可能带来“连锁更新”。 请看下图，ziplist中所有entry节点的长度都在250字节至253字节之间，big节点长度大于254字节，small节点小于254字节。</p>
+<p><img src="https://user-gold-cdn.xitu.io/2019/12/2/16ec2449a8205b33?imageslim"></p>
+<h2 id="哈希表"><a href="#哈希表" class="headerlink" title="哈希表"></a>哈希表</h2><p>哈希表略微有点复杂。哈希表的制作方法一般有两种，一种是：开放寻址法，一种是拉链法。redis的哈希表的制作使用的是拉链法。</p>
+<p>整体结构如下图：</p>
+<p><img src="https://img-blog.csdnimg.cn/20210127232430163.png"></p>
+<p>也是分为两部分：左边橘黄色部分和右边蓝色部分，同样，也是”统筹“和”实施“的关系。 具体哈希表的实现，都是在蓝色部分实现的。 先来看看蓝色部分：</p>
+<p><img src="https://img-blog.csdnimg.cn/20210127232455517.png"></p>
+<p>这也分为左右两边“统筹”和“实施”的两部分。</p>
+<p>右边部分很容易理解：就是通常拉链表实现的哈希表的样式；数组就是bucket，一般不同的key首先会定位到不同的bucket，若key重复，就用链表把冲突的key串起来。</p>
+<p><strong>新建key的过程：</strong></p>
+<p><img src="https://user-gold-cdn.xitu.io/2019/12/2/16ec244b575509bb?imageslim"></p>
+<p><strong>假如重复了:</strong></p>
+<p><img src="https://user-gold-cdn.xitu.io/2019/12/2/16ec244dd6e6a6ba?imageslim"></p>
+<p><strong>rehash</strong></p>
+<p>再来看看哈希表总体图中左边橘黄色的“统筹”部分，其中有两个关键的属性：ht和rehashidx。<br>ht是一个数组，有且只有俩元素ht[0]和ht[1];其中，ht[0]存放的是redis中使用的哈希表，而ht[1]和rehashidx和哈希表的rehash有关。</p>
+<p>rehash指的是重新计算键的哈希值和索引值，然后将键值对重排的过程。</p>
+<p>加载因子（load factor） = ht[0].used / ht[0].size。</p>
+<p><strong>扩容和收缩标准</strong></p>
+<p>扩容：</p>
+<ul>
+<li><p>没有执行BGSAVE和BGREWRITEAOF指令的情况下，哈希表的加载因子大于等于1。</p>
+</li>
+<li><p>正在执行BGSAVE和BGREWRITEAOF指令的情况下，哈希表的加载因子大于等于5。</p>
+</li>
+</ul>
+<p>收缩:</p>
+<ul>
+<li>加载因子小于0.1时，程序自动开始对哈希表进行收缩操作。</li>
+</ul>
+<p><strong>扩容和收缩的数量</strong></p>
+<p>扩容：第一个大于等于ht[0].used * 2的2^n(2的n次方幂)。</p>
+<p>收缩：第一个大于等于ht[0].used的2^n(2的n次方幂)。</p>
+<h2 id="intset"><a href="#intset" class="headerlink" title="intset"></a>intset</h2><p>整数集合是集合键的底层实现方式之一。</p>
+<p><img src="https://img-blog.csdnimg.cn/20210127233528661.png"></p>
+<h2 id="跳表"><a href="#跳表" class="headerlink" title="跳表"></a>跳表</h2><p>跳表这种数据结构长这样：</p>
+<p><img src="https://img-blog.csdnimg.cn/20210127233556388.png"></p>
+<p>redis中把跳表抽象成如下所示：</p>
+<p><img src="https://img-blog.csdnimg.cn/20210127233621889.png"></p>
+<p>看这个图，左边“统筹”，右边实现。 统筹部分有以下几点说明：</p>
+<ul>
+<li>header: 跳表表头</li>
+<li>tail:跳表表尾</li>
+<li>level:层数最大的那个节点的层数</li>
+<li>length：跳表的长度</li>
+</ul>
+<p>实现部分有以下几点说明：</p>
+<ul>
+<li>表头：是链表的哨兵节点，不记录主体数据。</li>
+<li>是个双向链表</li>
+<li>分值是有顺序的</li>
+<li>o1、o2、o3是节点所保存的成员，是一个指针，可以指向一个SDS值。</li>
+<li>层级高度最高是32。没每次创建一个新的节点的时候，程序都会随机生成一个介于1和32之间的值作为level数组的大小，这个大小就是“高度”</li>
+</ul>
+<h2 id="redis五种数据结构的实现"><a href="#redis五种数据结构的实现" class="headerlink" title="redis五种数据结构的实现"></a>redis五种数据结构的实现</h2><h3 id="redis对象"><a href="#redis对象" class="headerlink" title="redis对象"></a>redis对象</h3><p>redis中并没有直接使用以上所说的各种数据结构来实现键值数据库，而是基于一种对象，对象底层再间接的引用上文所说的具体的数据结构。</p>
+<p>结构如下图：</p>
+<p><img src="https://img-blog.csdnimg.cn/20210127233751867.png"></p>
+<h3 id="字符串"><a href="#字符串" class="headerlink" title="字符串"></a>字符串</h3><p><img src="https://img-blog.csdnimg.cn/20210127233834474.png"></p>
+<p>其中：embstr和raw都是由SDS动态字符串构成的。唯一区别是：raw是分配内存的时候，redisobject和 sds 各分配一块内存，而embstr是redisobject和在一块儿内存中。</p>
+<h3 id="列表"><a href="#列表" class="headerlink" title="列表"></a>列表</h3><p><img src="https://img-blog.csdnimg.cn/20210127233904573.png"></p>
+<h3 id="hash"><a href="#hash" class="headerlink" title="hash"></a>hash</h3><p><img src="https://img-blog.csdnimg.cn/20210127233931536.png"></p>
+<h3 id="set"><a href="#set" class="headerlink" title="set"></a>set</h3><p><img src="https://img-blog.csdnimg.cn/20210127233954733.png"></p>
+<h3 id="zset"><a href="#zset" class="headerlink" title="zset"></a>zset</h3><p><img src="https://img-blog.csdnimg.cn/20210127234030208.png"></p>
+<h2 id="缓存雪崩"><a href="#缓存雪崩" class="headerlink" title="缓存雪崩"></a>缓存雪崩</h2><p><img src="https://img-blog.csdnimg.cn/20210127234543130.png"></p>
+<h3 id="举例"><a href="#举例" class="headerlink" title="举例"></a>举例</h3><p>双十一期间，所有用户一打开淘宝就是进入<code>首页</code>，首页的压力非常大，为了提高并发，将网站<code>首页数据</code>都缓存到<code>redis</code>里，所有的redis key<code>失效时间</code>都是<code>3小时</code>。</p>
+<p>双十一当天大量用户<code>剁手狂欢</code>，这时候3个小时过去了，redis里首页的key<code>缓存全部失效</code>，这时候redis里查询不到数据了，只能去<code>数据库</code>中查询，造成数据库无法响应<code>挂掉</code>。</p>
+<p>用户进不去首页没法剁手了，<code>马爸爸</code>就<code>不开心</code>了，把这个程序员外派到<code>非洲</code>了。</p>
+<h3 id="一句话总结"><a href="#一句话总结" class="headerlink" title="一句话总结"></a>一句话总结</h3><p>在<code>高并发</code>下，大量缓存key在<code>同一时间失效</code>，大量请求直接落在数据库上，导致数据库宕机。</p>
+<h3 id="解决方案"><a href="#解决方案" class="headerlink" title="解决方案"></a>解决方案</h3><ul>
+<li>随机设置key失效时间，避免大量key集体失效。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">setRedis（Key，value，time + Math.random() * <span class="number">10000</span>）；</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>若是集群部署，可将热点数据均匀分布在不同的Redis库中也能够避免key全部失效问题</p>
+</li>
+<li><p>不设置过期时间</p>
+</li>
+<li><p>跑定时任务，在缓存失效前刷进新的缓存</p>
+</li>
+</ul>
+<h2 id="缓存穿透"><a href="#缓存穿透" class="headerlink" title="缓存穿透"></a>缓存穿透</h2><p><img src="https://img-blog.csdnimg.cn/"></p>
+<h3 id="举例-1"><a href="#举例-1" class="headerlink" title="举例"></a>举例</h3><p>老哥做了一个网站<code>火了</code>，动了别人的蛋糕，于是开始<code>疯狂攻击</code>老哥的网站，由于老哥<code>网络安全</code>方面学艺不精被人钻了空子。</p>
+<p>某人用脚本疯狂的给老哥发送请求，查询 <code>id = -1</code> 的数据，redis并没有这样的数据，这时候就<code>穿透redis</code>，直接打到了<code>数据库</code>上。</p>
+<p>半夜老哥在睡觉并没有察觉，他疯狂攻击老哥一晚上，结果把<code>数据库</code>搞挂了，然后老哥的<code>网站</code>也挂了。</p>
+<h3 id="一句话总结-1"><a href="#一句话总结-1" class="headerlink" title="一句话总结"></a>一句话总结</h3><p><code>redis缓存</code>和<code>数据库</code>中没有相关数据(例用户直接携带<code>id&lt;=0</code>的参数不断发起请求)，redis中没有这样的数据，<code>无法进行拦截</code>，直接被穿透到<code>数据库</code>，导致数据库压力过大宕机。</p>
+<h3 id="解决方案-1"><a href="#解决方案-1" class="headerlink" title="解决方案"></a>解决方案</h3><ul>
+<li><p>对不存在的数据缓存到redis中，设置key，value值为null(不管是数据未null还是系统bug问题)，并设置一个短期过期时间段，避免过期时间过长影响正常用户使用。</p>
+</li>
+<li><p>拉黑该IP地址</p>
+</li>
+<li><p>对参数进行校验，不合法参数进行拦截</p>
+</li>
+<li><p>布隆过滤器 将所有可能存在的数据哈希到一个足够大的bitmap(位图)中，一个一定不存在的数据会被 这个bitmap拦截掉，从而避免了对底层存储系统的查询压力。</p>
+</li>
+</ul>
+<h2 id="缓存击穿"><a href="#缓存击穿" class="headerlink" title="缓存击穿"></a>缓存击穿</h2><p><img src="https://img-blog.csdnimg.cn/20210127234652977.png"></p>
+<h3 id="举例-2"><a href="#举例-2" class="headerlink" title="举例"></a>举例</h3><p>双十一<code>马爸爸</code>突发奇想，想<code>拍卖</code>自己<code>穿了20年的老布鞋</code>，并且附带本人签名，程序员将该鞋的信息存到了redis中，设置了<code>3小时</code>过期。寻思3小时够他们抢了吧，但他低估了马爸爸的魅力。</p>
+<p>该商品引起了一千万人关注，这些人不断的竞拍这双鞋，价格越拍越高，马爸爸乐开了花。</p>
+<p>竞拍了<code>2小时59</code>分，马上要拍到一个亿了，突然这双鞋在redis里的key数据<code>过期了</code>，导致该key的大量请求，都打到了数据库，直接导致数据库挂掉了，服务无法响应。</p>
+<p>竞拍到此结束，鞋没卖出去，马爸爸又不开心了，把这个程序员也<code>外派到非洲</code>了。</p>
+<h3 id="一句话总结-2"><a href="#一句话总结-2" class="headerlink" title="一句话总结"></a>一句话总结</h3><p><code>某一个</code>热点key，在不停地扛着高并发，当这个热点key在<code>失效的一瞬间</code>，持续的高并发访问就<code>击破缓存</code>直接访问数据库，导致数据库宕机。</p>
+<h3 id="解决方案-2"><a href="#解决方案-2" class="headerlink" title="解决方案"></a>解决方案</h3><ul>
+<li><p>设置热点数据”永不过期”</p>
+</li>
+<li><p>加上互斥锁：上面的现象是多个线程同时去查询数据库的这条数据，那么我们可以在第一个查询数据的请求上使用一个互斥锁来锁住它</p>
+<p>其他的线程走到这一步拿不到锁就等着，等第一个线程查询到了数据，然后将数据放到redis缓存起来。后面的线程进来发现已经有缓存了，就直接走缓存</p>
+</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"># 简单的分布式锁实现，之后我们重点会讲分布式锁</span><br><span class="line"><span class="function"><span class="keyword">public</span> String <span class="title">get</span><span class="params">(key)</span> </span>&#123;</span><br><span class="line">  String value = redis.get(key);</span><br><span class="line">  <span class="keyword">if</span> (value == <span class="keyword">null</span>) &#123; <span class="comment">//代表缓存值过期</span></span><br><span class="line">    <span class="comment">//设置3min的超时，防止del操作失败的时候，下次缓存过期一直不能load db</span></span><br><span class="line">    String keynx = key.concat(<span class="string">&quot;:nx&quot;</span>);</span><br><span class="line">    <span class="keyword">if</span> (redis.setnx(keynx, <span class="number">1</span>, <span class="number">3</span> * <span class="number">60</span>) == <span class="number">1</span>) &#123; <span class="comment">//代表设置成功</span></span><br><span class="line">      value = db.get(key);</span><br><span class="line">      redis.set(key, value, expire_secs);</span><br><span class="line">      redis.del(keynx);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="comment">//这个时候代表同时候的其他线程已经load db并回设到缓存了，这时候重试获取缓存值即可</span></span><br><span class="line">      sleep(<span class="number">50</span>);</span><br><span class="line">      get(key); <span class="comment">//重试</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">    <span class="keyword">return</span> value;        </span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="最后总结"><a href="#最后总结" class="headerlink" title="最后总结"></a>最后总结</h3><p>雪崩是<code>大面积</code>的key缓存失效；穿透是redis里<code>不存在</code>这个缓存key；击穿是redis<code>某一个热点</code>key突然失效，最终的受害者都是数据库。</p>
+<h3 id="思考"><a href="#思考" class="headerlink" title="思考"></a>思考</h3><p><code>未雨绸缪</code>：将redis、MySQL等搭建成高可用的集群，防止单点。</p>
+<p><code>亡羊补牢</code>：服务中进行限流 + 降级，防止MySQL被打崩溃。</p>
+<p><code>重振旗鼓</code>：Redis 持久化 RDB+AOF，宕机重启，自动从磁盘上加载数据，快速恢复缓存数据。</p>
+<h2 id="什么是布隆过滤器"><a href="#什么是布隆过滤器" class="headerlink" title="什么是布隆过滤器"></a>什么是布隆过滤器</h2><p>布隆过滤器（Bloom Filter），是1970年，由一个叫布隆的小伙子提出的，距今已经五十年了，和老哥一样老。</p>
+<p>它实际上是一个很长的二进制向量和一系列随机映射函数，二进制大家应该都清楚，存储的数据不是0就是1，默认是0。</p>
+<p>主要用于判断一个元素是否在一个集合中，0代表不存在某个数据，1代表存在某个数据。<br>                                                       <img src="https://img-blog.csdnimg.cn/20210127235443711.png"></p>
+<h2 id="布隆过滤器用途"><a href="#布隆过滤器用途" class="headerlink" title="布隆过滤器用途"></a>布隆过滤器用途</h2><ul>
+<li><p>解决Redis缓存穿透（今天重点讲解）</p>
+</li>
+<li><p>在爬虫时，对爬虫网址进行过滤，已经存在布隆中的网址，不在爬取。</p>
+</li>
+<li><p>垃圾邮件过滤，对每一个发送邮件的地址进行判断是否在布隆的黑名单中，如果在就判断为垃圾邮件。</p>
+</li>
+</ul>
+<p>以上只是简单的用途举例，大家可以举一反三，灵活运用在工作中。</p>
+<h2 id="布隆过滤器原理"><a href="#布隆过滤器原理" class="headerlink" title="布隆过滤器原理"></a>布隆过滤器原理</h2><h3 id="存入数据过程"><a href="#存入数据过程" class="headerlink" title="存入数据过程"></a>存入数据过程</h3><p>布隆过滤器上面说了，就是一个二进制数据的集合。当一个数据加入这个集合时，经历如下洗礼（这里有缺点，下面会讲）：</p>
+<ul>
+<li><p>通过K个哈希函数计算该数据，返回K个计算出的hash值</p>
+</li>
+<li><p>这些K个hash值映射到对应的K个二进制的数组下标</p>
+</li>
+<li><p>将K个下标对应的二进制数据改成1。       </p>
+</li>
+</ul>
+<p>例如，第一个哈希函数返回x，第二个第三个哈希函数返回y与z，那么：X、Y、Z对应的二进制改成1。</p>
+<p><img src="https://img-blog.csdnimg.cn/20210127235644503.png"></p>
+<h3 id="查询数据过程"><a href="#查询数据过程" class="headerlink" title="查询数据过程"></a>查询数据过程</h3><p>布隆过滤器主要作用就是查询一个数据，在不在这个二进制的集合中，查询过程如下：</p>
+<ul>
+<li><p>通过K个哈希函数计算该数据，对应计算出的K个hash值</p>
+</li>
+<li><p>通过hash值找到对应的二进制的数组下标</p>
+</li>
+<li><p>判断：如果存在一处位置的二进制数据是0，那么该数据不存在。如果都是1，该数据存在集合中。（这里有缺点，下面会讲）</p>
+</li>
+</ul>
+<h3 id="删除数据过程"><a href="#删除数据过程" class="headerlink" title="删除数据过程"></a>删除数据过程</h3><p>一般不能删除布隆过滤器里的数据，这是一个缺点之一，我们下面会分析。</p>
+<h2 id="布隆过滤器的优缺点"><a href="#布隆过滤器的优缺点" class="headerlink" title="布隆过滤器的优缺点"></a>布隆过滤器的优缺点</h2><h3 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h3><ul>
+<li><p>由于存储的是二进制数据，所以占用的空间很小</p>
+</li>
+<li><p>它的插入和查询速度是非常快的，时间复杂度是O（K），可以联想一下HashMap的过程</p>
+</li>
+<li><p>保密性很好，因为本身不存储任何原始数据，只有二进制数据</p>
+<h3 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h3><p>这就要回到我们上面所说的那些缺点了。</p>
+</li>
+</ul>
+<p>添加数据是通过计算数据的hash值，那么很有可能存在这种情况：两个不同的数据计算得到相同的hash值。</p>
+<p><img src="https://img-blog.csdnimg.cn/20210128000047782.png"></p>
+<p>例如图中的“你好”和“hello”，假如最终算出hash值相同，那么他们会将同一个下标的二进制数据改为1。</p>
+<p>这个时候，你就不知道下标为2的二进制，到底是代表“你好”还是“hello”。</p>
+<p><strong>由此得出如下缺点：</strong></p>
+<p><strong>一、存在误判</strong></p>
+<p>假如上面的图没有存”hello”，只存了”你好”，那么用”hello”来查询的时候，会判断”hello”存在集合中。</p>
+<p><strong>二、删除困难</strong></p>
+<p>还是用上面的举例，因为“你好”和“hello”的hash值相同，对应的数组下标也是一样的。</p>
+<p>这时候老哥想去删除“你好”，将下标为2里的二进制数据，由1改成了0。</p>
+<p>那么我们是不是连“hello”都一起删了呀。（0代表有这个数据，1代表没有这个数据）</p>
+<h2 id="实现布隆过滤器方式"><a href="#实现布隆过滤器方式" class="headerlink" title="实现布隆过滤器方式"></a>实现布隆过滤器方式</h2><p>有很多种实现方式，其中一种就是Guava提供的实现方式。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> com.google.common.hash.BloomFilter;</span><br><span class="line"><span class="keyword">import</span> com.google.common.hash.Funnels;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BloomFilterCase</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * 预计要插入多少数据</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> size = <span class="number">1000000</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * 期望的误判率</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">double</span> fpp = <span class="number">0.01</span>;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * 布隆过滤器</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="keyword">private</span> <span class="keyword">static</span> BloomFilter&lt;Integer&gt; bloomFilter = BloomFilter.create(Funnels.integerFunnel(), size, fpp);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 插入10万样本数据</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; size; i++) &#123;</span><br><span class="line">      bloomFilter.put(i);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 用另外十万测试数据，测试误判率</span></span><br><span class="line">    <span class="keyword">int</span> count = <span class="number">0</span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">int</span> i = size; i &lt; size + <span class="number">100000</span>; i++) &#123;</span><br><span class="line">      <span class="keyword">if</span> (bloomFilter.mightContain(i)) &#123;</span><br><span class="line">        count++;</span><br><span class="line">        System.out.println(i + <span class="string">&quot;误判了&quot;</span>);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    System.out.println(<span class="string">&quot;总共的误判数:&quot;</span> + count);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>运行结果：</p>
+<p><img src="https://img-blog.csdnimg.cn/20210128000333819.png"></p>
+<p>10万数据里有947个误判，约等于0.01%，也就是我们代码里设置的误判率：fpp = 0.01。</p>
+<h2 id="布隆过滤器深入分析代码"><a href="#布隆过滤器深入分析代码" class="headerlink" title="布隆过滤器深入分析代码"></a>布隆过滤器深入分析代码</h2><p>核心BloomFilter.create方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@VisibleForTesting</span></span><br><span class="line">  <span class="keyword">static</span> &lt;T&gt; <span class="function">BloomFilter&lt;T&gt; <span class="title">create</span><span class="params">(</span></span></span><br><span class="line"><span class="function"><span class="params">      Funnel&lt;? <span class="keyword">super</span> T&gt; funnel, <span class="keyword">long</span> expectedInsertions, <span class="keyword">double</span> fpp, Strategy strategy)</span> </span>&#123;</span><br><span class="line">    。。。。</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里有四个参数：</p>
+<ul>
+<li><p>funnel：数据类型(一般是调用Funnels工具类中的)</p>
+</li>
+<li><p>expectedInsertions：期望插入的值的个数</p>
+</li>
+<li><p>fpp：误判率(默认值为0.03)</p>
+</li>
+<li><p>strategy：哈希算法</p>
+</li>
+</ul>
+<p>我们重点讲一下fpp参数</p>
+<h3 id="fpp误判率"><a href="#fpp误判率" class="headerlink" title="fpp误判率"></a>fpp误判率</h3><p><strong>情景一：fpp = 0.01</strong></p>
+<p>误判个数：947</p>
+<p><img src="https://img-blog.csdnimg.cn/20210128000512120.png"></p>
+<p>占内存大小：9585058位数</p>
+<p><img src="https://img-blog.csdnimg.cn/20210128000528946.png0"></p>
+<p><strong>情景二：fpp = 0.03（默认参数）</strong></p>
+<p>误判个数：3033</p>
+<p><img src="https://img-blog.csdnimg.cn/20210128000614741.png"></p>
+<p>占内存大小：7298440位数</p>
+<p><img src="https://img-blog.csdnimg.cn/20210128000634945.png"></p>
+<h3 id="情景总结"><a href="#情景总结" class="headerlink" title="情景总结"></a>情景总结</h3><ul>
+<li><p>误判率可以通过fpp参数进行调节</p>
+</li>
+<li><p>fpp越小，需要的内存空间就越大：0.01需要900多万位数，0.03需要700多万位数。</p>
+</li>
+<li><p>fpp越小，集合添加数据时，就需要更多的hash函数运算更多的hash值，去存储到对应的数组下标里。（忘了去看上面的布隆过滤存入数据的过程）</p>
+</li>
+</ul>
+<p>上面的numBits，表示存一百万个int类型数字，需要的位数为7298440，700多万位。理论上存一百万个数，一个int是4字节32位，需要481000000=3200万位。</p>
+<p>如果使用HashMap去存，按HashMap50%的存储效率，需要6400万位。可以看出BloomFilter的存储空间很小，只有HashMap的1/10左右</p>
+<p>上面的numHashFunctions表示需要几个hash函数运算，去映射不同的下标存这些数字是否存在（0 or 1）。</p>
+<h2 id="布隆过滤器解决缓存穿透"><a href="#布隆过滤器解决缓存穿透" class="headerlink" title="布隆过滤器解决缓存穿透"></a>布隆过滤器解决缓存穿透</h2><p>其实布隆过滤器本质来讲，就是起到一个黑名单或者白名单的作用。我们从这两个角度去分析缓存穿透问题。</p>
+<h3 id="白名单解决缓存穿透"><a href="#白名单解决缓存穿透" class="headerlink" title="白名单解决缓存穿透"></a>白名单解决缓存穿透</h3><p><img src="https://img-blog.csdnimg.cn/20210128001031675.png"></p>
+<p><strong>注意问题</strong></p>
+<ul>
+<li><p>如果没在白名单里的数据被误判存在于过滤器里的话，会穿透到数据库，不过误判的几率本来就很小，所以穿透问题不大。</p>
+</li>
+<li><p>必须将所有的查询key都放到布隆过滤器和Redis里，否则请求会被直接返回空数据。</p>
+</li>
+</ul>
+<h3 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> com.alibaba.fastjson.JSON;</span><br><span class="line"><span class="keyword">import</span> com.bilibili.itlaoge.model.User;</span><br><span class="line"><span class="keyword">import</span> org.redisson.Redisson;</span><br><span class="line"><span class="keyword">import</span> org.redisson.api.RBloomFilter;</span><br><span class="line"><span class="keyword">import</span> org.redisson.api.RBucket;</span><br><span class="line"><span class="keyword">import</span> org.redisson.api.RedissonClient;</span><br><span class="line"><span class="keyword">import</span> org.redisson.config.Config;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 解决缓存穿透—白名单</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RedissonBloomFilter</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 构造Redisson</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">static</span> RedissonClient redisson = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> RBloomFilter&lt;String&gt; bloomFilter = <span class="keyword">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">static</span> &#123;</span><br><span class="line">      Config config = <span class="keyword">new</span> Config();</span><br><span class="line">      config.useSingleServer().setAddress(<span class="string">&quot;redis://127.0.0.1:6379&quot;</span>);</span><br><span class="line"></span><br><span class="line">      <span class="comment">//构造Redisson</span></span><br><span class="line">      redisson = Redisson.create(config);</span><br><span class="line">      <span class="comment">//构造布隆过滤器</span></span><br><span class="line">      bloomFilter = redisson.getBloomFilter(<span class="string">&quot;userIdFilter&quot;</span>);</span><br><span class="line"></span><br><span class="line">      <span class="comment">// 将查询数据放入Redis缓存和布隆过滤器里</span></span><br><span class="line">      initData(redisson, bloomFilter);</span><br><span class="line">  &#125;</span><br><span class="line">  </span><br><span class="line">  <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">initData</span><span class="params">(RedissonClient redisson, RBloomFilter&lt;String&gt; bloomFilter)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">      <span class="comment">//初始化布隆过滤器：预计元素为100000000L,误差率为3%</span></span><br><span class="line">      bloomFilter.tryInit(<span class="number">100000000L</span>,<span class="number">0.01</span>);</span><br><span class="line"></span><br><span class="line">      <span class="comment">//将id为1的数据，插入到布隆过滤器中</span></span><br><span class="line">      bloomFilter.add(<span class="string">&quot;1&quot;</span>);</span><br><span class="line">      bloomFilter.add(<span class="string">&quot;2&quot;</span>);</span><br><span class="line"></span><br><span class="line">      <span class="comment">// 将id为1对应的user数据，插入到Redis缓存中</span></span><br><span class="line">      redisson.getBucket(<span class="string">&quot;1&quot;</span>).set(<span class="string">&quot;&#123;id:1, userName:&#x27;张三&#x27;, age:18&#125;&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">      User user = getUserById(<span class="number">2L</span>);</span><br><span class="line">      System.out.println(<span class="string">&quot;user对象为：&quot;</span> + JSON.toJSONString(user));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> User <span class="title">getUserById</span><span class="params">(Long id)</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">if</span> (<span class="keyword">null</span> == id) &#123;</span><br><span class="line">          <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">      &#125;</span><br><span class="line">      String idKey = id.toString();</span><br><span class="line"></span><br><span class="line">      <span class="comment">// 开始模拟缓存穿透</span></span><br><span class="line">      <span class="comment">// 前端查询请求key</span></span><br><span class="line">      <span class="keyword">if</span> (bloomFilter.contains(idKey)) &#123;</span><br><span class="line"></span><br><span class="line">          <span class="comment">// 通过了过滤器白名单校验，去Redis里查询真正的数据</span></span><br><span class="line">          RBucket&lt;Object&gt; bucket = redisson.getBucket(idKey);</span><br><span class="line">          Object object = bucket.get();</span><br><span class="line"></span><br><span class="line">          <span class="comment">// 如果Redis有数据，直接返回该数据</span></span><br><span class="line">          <span class="keyword">if</span> (<span class="keyword">null</span> != object) &#123;</span><br><span class="line">              System.out.println(<span class="string">&quot;从Redis里面查询出来的&quot;</span>);</span><br><span class="line">              String userStr = object.toString();</span><br><span class="line">              <span class="keyword">return</span> JSON.parseObject(userStr, User.class);</span><br><span class="line">          &#125;</span><br><span class="line"></span><br><span class="line">          <span class="comment">// 如果Redis为空，去查询数据库</span></span><br><span class="line">          User user = selectByDb(idKey);</span><br><span class="line">          <span class="keyword">if</span> (<span class="keyword">null</span> == user) &#123;</span><br><span class="line">              <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">          &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">              <span class="comment">// 将数据重新刷进缓存</span></span><br><span class="line">              redisson.getBucket(id.toString()).set(JSON.toJSONString(user));</span><br><span class="line">          &#125;</span><br><span class="line">          <span class="keyword">return</span> user;</span><br><span class="line">      &#125;</span><br><span class="line"></span><br><span class="line">      <span class="keyword">return</span> <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> User <span class="title">selectByDb</span><span class="params">(String id)</span> </span>&#123;</span><br><span class="line">      System.out.println(<span class="string">&quot;从MySQL里面查询出来的&quot;</span>);</span><br><span class="line">      User user = <span class="keyword">new</span> User();</span><br><span class="line">      user.setId(<span class="number">1L</span>);</span><br><span class="line">      user.setUserName(<span class="string">&quot;张三&quot;</span>);</span><br><span class="line">      user.setAge(<span class="number">18</span>);</span><br><span class="line">      <span class="keyword">return</span> user;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 用户实体类</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@author</span> hp</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">User</span> <span class="keyword">implements</span> <span class="title">Serializable</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">static</span> String maYunPhone = <span class="string">&quot;18890019390&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> Long id;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 用户名</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> String userName;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 年龄</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">private</span> Integer age;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="黑名单解决缓存穿透"><a href="#黑名单解决缓存穿透" class="headerlink" title="黑名单解决缓存穿透"></a>黑名单解决缓存穿透</h3><p><img src="https://img-blog.csdnimg.cn/20210128001215801.png"></p>
+<p><strong>注意问题</strong></p>
+<ul>
+<li><p>布隆过滤器里的数据，存在误判，如果正常数据被误判存在黑名单里的话，会直接返回空数据。</p>
+</li>
+<li><p>黑名单里的数据要很全面才行，否则会有比较严重的穿透问题。</p>
+</li>
+<li><p>本来是在黑名单里的非法数据，之后有可能是正常数据。如：用id大于100万的数来请求，我们数据库里只有10万数据，这时候如果把id放进黑名单里。等数据达到100万的时候，就会出现问题。</p>
+</li>
+</ul>
+<h2 id="布隆过滤器其他应用场景举例"><a href="#布隆过滤器其他应用场景举例" class="headerlink" title="布隆过滤器其他应用场景举例"></a>布隆过滤器其他应用场景举例</h2><h3 id="视频推送场景（黑名单）"><a href="#视频推送场景（黑名单）" class="headerlink" title="视频推送场景（黑名单）"></a>视频推送场景（黑名单）</h3><p><img src="https://img-blog.csdnimg.cn/20210128001336702.png"></p>
+<p>背景：某视频网站给用户推送视频</p>
+<p>布隆过滤器作用：当黑名单使用。</p>
+<p>要求：对于某用户，已经推送过的视频，不在进行推送。</p>
+<p>流程：当推送给用户一批视频时，先判断这些视频是否存在过滤器里；如果存在就不推送给用户，不存在就推送给用户；同时将推送过的视频存入过滤器黑名单里，防止下次重复推送。</p>
+<h3 id="转载视频-文章案例（白名单）"><a href="#转载视频-文章案例（白名单）" class="headerlink" title="转载视频/文章案例（白名单）"></a>转载视频/文章案例（白名单）</h3><p><img src="https://img-blog.csdnimg.cn/20210128001405878.png"></p>
+<p>背景：某用户想转载老哥的文章。</p>
+<p>布隆过滤器作用：当白名单使用。</p>
+<p>要求：在老哥转发白名单里的，有转发文章的权限。</p>
+<p>流程：某用户想转发老哥的文章，由于没在白名单里，转发失败。于是找到老哥开白名单，老哥把他加入了白名单里后，允许转发了。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">sry king</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://hu16839007.github.io.git/2021/06/11/redis/">https://hu16839007.github.io.git/2021/06/11/redis/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://hu16839007.github.io.git" target="_blank">hide on bush</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"></div><div class="post_share"><div class="social-share" data-image="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><div class="post-reward"><div class="reward-button button--animated"><i class="fas fa-qrcode"></i> 打赏</div><div class="reward-main"><ul class="reward-all"><li class="reward-item"><a href="/img/wechat.jpg" target="_blank"><img class="post-qr-code-img" src="/img/wechat.jpg" alt="微信"/></a><div class="post-qr-code-desc">微信</div></li><li class="reward-item"><a href="/img/alipay.jpg" target="_blank"><img class="post-qr-code-img" src="/img/alipay.jpg" alt="支付宝"/></a><div class="post-qr-code-desc">支付宝</div></li></ul></div></div><nav class="pagination-post" id="pagination"><div class="prev-post pull-left"><a href="/2021/06/11/springCloud/"><img class="prev-cover" src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">上一篇</div><div class="prev_info"></div></div></a></div><div class="next-post pull-right"><a href="/2021/03/11/page/"><img class="next-cover" src="/img/keji.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">java基础</div></div></a></div></nav><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="card-info-avatar is-center"><img class="avatar-img" src="https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=3862012102,3146387484&amp;fm=26&amp;gp=0.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/><div class="author-info__name">sry king</div><div class="author-info__description">Follow your heart, but be quiet for a while first. Learn to trust your heart.</div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">16</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">1</div></a></div><div class="card-info-data-item is-center"><a href="/categories/"><div class="headline">分类</div><div class="length-num">1</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/hu16839007/hu16839007.github.io"><i class="fab fa-github"></i><span>Github 项目</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/hu16839007" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:441129080@qq.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">This is my Blog 评论系统已更新,欢迎留言评论</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#redis%E4%BA%94%E5%A4%A7%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B"><span class="toc-number">1.</span> <span class="toc-text">redis五大数据类型</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#redis%E9%94%AE%EF%BC%88key%EF%BC%89"><span class="toc-number">2.</span> <span class="toc-text">redis键（key）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4"><span class="toc-number">2.1.</span> <span class="toc-text">常用命令</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#String%E7%B1%BB%E5%9E%8B"><span class="toc-number">3.</span> <span class="toc-text">String类型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B"><span class="toc-number">3.1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4-1"><span class="toc-number">3.2.</span> <span class="toc-text">常用命令</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#List%E7%B1%BB%E5%9E%8B"><span class="toc-number">4.</span> <span class="toc-text">List类型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B-1"><span class="toc-number">4.1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4-2"><span class="toc-number">4.2.</span> <span class="toc-text">常用命令</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Hash%E7%B1%BB%E5%9E%8B"><span class="toc-number">5.</span> <span class="toc-text">Hash类型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B-2"><span class="toc-number">5.1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4-3"><span class="toc-number">5.2.</span> <span class="toc-text">常用命令</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#set%E7%B1%BB%E5%9E%8B"><span class="toc-number">6.</span> <span class="toc-text">set类型</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B-3"><span class="toc-number">6.1.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4-4"><span class="toc-number">6.2.</span> <span class="toc-text">常用命令</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Zset-sorted-set-%E7%B1%BB%E5%9E%8B"><span class="toc-number">6.3.</span> <span class="toc-text">Zset(sorted set)类型</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%80%E4%BB%8B-4"><span class="toc-number">6.4.</span> <span class="toc-text">简介</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4-5"><span class="toc-number">6.5.</span> <span class="toc-text">常用命令</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Redis%E6%8C%81%E4%B9%85%E5%8C%96%E4%B8%A4%E7%A7%8D%E6%96%B9%E5%BC%8F"><span class="toc-number">7.</span> <span class="toc-text">Redis持久化两种方式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RDB%E6%8C%81%E4%B9%85%E5%8C%96"><span class="toc-number">8.</span> <span class="toc-text">RDB持久化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#RDB%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-number">8.1.</span> <span class="toc-text">RDB是什么</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E9%85%8D%E7%BD%AE"><span class="toc-number">8.2.</span> <span class="toc-text">如何配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%A6%E5%8F%91RDB%E5%87%A0%E7%A7%8D%E6%96%B9%E5%BC%8F"><span class="toc-number">8.3.</span> <span class="toc-text">触发RDB几种方式</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%87%AA%E5%8A%A8%E8%A7%A6%E5%8F%91"><span class="toc-number">8.3.1.</span> <span class="toc-text">自动触发</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%89%8B%E5%8A%A8%E8%A7%A6%E5%8F%91"><span class="toc-number">8.3.2.</span> <span class="toc-text">手动触发</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8C%81%E4%B9%85%E5%8C%96%E5%8E%9F%E7%90%86-fork"><span class="toc-number">8.4.</span> <span class="toc-text">持久化原理-fork</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B0%86%E6%8C%81%E4%B9%85%E5%8C%96%E6%96%87%E4%BB%B6%E9%87%8D%E6%96%B0%E5%8A%A0%E8%BD%BD%E5%88%B0%E5%86%85%E5%AD%98%E4%B8%AD"><span class="toc-number">8.5.</span> <span class="toc-text">将持久化文件重新加载到内存中</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RDB%E4%BC%98%E5%8A%BF%E4%B8%8E%E5%8A%A3%E5%8A%BF"><span class="toc-number">8.6.</span> <span class="toc-text">RDB优势与劣势</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BC%98%E5%8A%BF"><span class="toc-number">8.6.1.</span> <span class="toc-text">优势</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8A%A3%E5%8A%BF"><span class="toc-number">8.6.2.</span> <span class="toc-text">劣势</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#RDB%E6%80%BB%E7%BB%93"><span class="toc-number">8.7.</span> <span class="toc-text">RDB总结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#AOF%E6%8C%81%E4%B9%85%E5%8C%96"><span class="toc-number">9.</span> <span class="toc-text">AOF持久化</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#AOF%E6%98%AF%E4%BB%80%E4%B9%88"><span class="toc-number">9.1.</span> <span class="toc-text">AOF是什么</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E9%85%8D%E7%BD%AE-1"><span class="toc-number">9.2.</span> <span class="toc-text">如何配置</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%8C%81%E4%B9%85%E5%8C%96%E7%AD%96%E7%95%A5"><span class="toc-number">9.2.1.</span> <span class="toc-text">持久化策略</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#AOF%E5%90%AF%E5%8A%A8-%E6%81%A2%E5%A4%8D-%E4%BF%AE%E5%A4%8D"><span class="toc-number">9.3.</span> <span class="toc-text">AOF启动&#x2F;恢复&#x2F;修复</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Rewrite%E9%87%8D%E5%86%99AOF%E6%96%87%E4%BB%B6"><span class="toc-number">9.4.</span> <span class="toc-text">Rewrite重写AOF文件</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AFRewrite"><span class="toc-number">9.4.1.</span> <span class="toc-text">什么是Rewrite</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#Rewrite%E5%8E%9F%E7%90%86"><span class="toc-number">9.4.2.</span> <span class="toc-text">Rewrite原理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%A7%A6%E5%8F%91%E9%87%8D%E5%86%99%E6%9C%BA%E5%88%B6"><span class="toc-number">9.4.3.</span> <span class="toc-text">触发重写机制</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#AOF%E4%BC%98%E5%8A%BF-%E5%8A%A3%E5%8A%BF"><span class="toc-number">9.5.</span> <span class="toc-text">AOF优势&#x2F;劣势</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BC%98%E5%8A%BF-1"><span class="toc-number">9.5.1.</span> <span class="toc-text">优势</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%8A%A3%E5%8A%BF-1"><span class="toc-number">9.5.2.</span> <span class="toc-text">劣势</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#AOF%E6%80%BB%E7%BB%93"><span class="toc-number">9.6.</span> <span class="toc-text">AOF总结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%93%A8%E5%85%B5%E7%AE%80%E4%BB%8B"><span class="toc-number">10.</span> <span class="toc-text">哨兵简介</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#Sentinel%E5%93%A8%E5%85%B5%E8%81%8C%E8%B4%A3%E5%A6%82%E4%B8%8B%EF%BC%9A"><span class="toc-number">10.0.1.</span> <span class="toc-text">Sentinel哨兵职责如下：</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%93%A8%E5%85%B5%E6%90%AD%E5%BB%BA"><span class="toc-number">11.</span> <span class="toc-text">哨兵搭建</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%BA%E5%99%A8%E5%87%86%E5%A4%87"><span class="toc-number">11.1.</span> <span class="toc-text">机器准备</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%94%E4%B8%AA%E4%B8%BB%E8%A6%81%E9%85%8D%E7%BD%AE%E8%AE%B2%E8%A7%A3"><span class="toc-number">11.2.</span> <span class="toc-text">五个主要配置讲解</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%80%EF%BC%9A%E9%85%8D%E7%BD%AEsentinel%E7%9B%91%E6%8E%A7master"><span class="toc-number">11.2.1.</span> <span class="toc-text">一：配置sentinel监控master</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BA%8C%EF%BC%9A%E9%85%8D%E7%BD%AEsentinel%E5%BF%83%E8%B7%B3"><span class="toc-number">11.2.2.</span> <span class="toc-text">二：配置sentinel心跳</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%89%EF%BC%9A%E9%85%8D%E7%BD%AE%E4%B8%BB%E4%BB%8E%E5%88%87%E6%8D%A2%E6%97%B6%EF%BC%8C%E5%90%8C%E6%AD%A5%E6%96%B0master%E7%9A%84salve%E4%B8%AA%E6%95%B0"><span class="toc-number">11.2.3.</span> <span class="toc-text">三：配置主从切换时，同步新master的salve个数</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%9B%9B%EF%BC%9A%E9%85%8D%E7%BD%AE%E6%95%85%E9%9A%9C%E8%BD%AC%E7%A7%BB%E6%9C%80%E5%A4%A7%E6%97%B6%E9%97%B4"><span class="toc-number">11.2.4.</span> <span class="toc-text">四：配置故障转移最大时间</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BA%94%EF%BC%9A%E9%85%8D%E7%BD%AE%E6%8A%A5%E8%AD%A6%E8%84%9A%E6%9C%AC"><span class="toc-number">11.2.5.</span> <span class="toc-text">五：配置报警脚本</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#sentinel%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6%E7%A4%BA%E4%BE%8B"><span class="toc-number">11.3.</span> <span class="toc-text">sentinel配置文件示例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%90%AF%E5%8A%A8sentinel"><span class="toc-number">11.4.</span> <span class="toc-text">启动sentinel</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%AA%8C%E8%AF%81%E4%B8%BB%E4%BB%8E%E5%88%87%E6%8D%A2"><span class="toc-number">11.5.</span> <span class="toc-text">验证主从切换</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B6381%E7%AB%AF%E5%8F%A3Redis%E6%9C%8D%E5%8A%A1%E5%99%A8"><span class="toc-number">11.5.1.</span> <span class="toc-text">查看6381端口Redis服务器</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Redis%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6"><span class="toc-number">12.</span> <span class="toc-text">Redis主从复制</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%A6%82%E5%BF%B5"><span class="toc-number">12.1.</span> <span class="toc-text">概念</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%B8%BB%E8%A6%81%E7%94%A8%E9%80%94"><span class="toc-number">12.1.1.</span> <span class="toc-text">主要用途</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E4%B8%BB%E5%A4%9A%E4%BB%8E%E9%85%8D%E7%BD%AE"><span class="toc-number">12.2.</span> <span class="toc-text">一主多从配置</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%8E%AF%E5%A2%83%E5%87%86%E5%A4%87"><span class="toc-number">12.2.1.</span> <span class="toc-text">环境准备</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%9F%A5%E7%9C%8B%E5%BD%93%E5%89%8D3%E5%8F%B0%E6%9C%BA%E5%99%A8%E4%B8%BB%E4%BB%8E%E8%A7%92%E8%89%B2"><span class="toc-number">12.2.2.</span> <span class="toc-text">查看当前3台机器主从角色</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AE%BE%E7%BD%AE%E4%B8%BB%E4%BB%8E%E5%85%B3%E7%B3%BB"><span class="toc-number">12.2.3.</span> <span class="toc-text">设置主从关系</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%86%8D%E6%AC%A1%E6%9F%A5%E7%9C%8B3%E5%8F%B0%E6%9C%BA%E5%99%A8%E7%9B%AE%E5%89%8D%E8%A7%92%E8%89%B2"><span class="toc-number">12.2.4.</span> <span class="toc-text">再次查看3台机器目前角色</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%90%AD%E5%BB%BA%E6%88%90%E5%8A%9F%EF%BC%8C%E8%AF%95%E9%AA%8C%E4%B8%80%E6%8A%8A"><span class="toc-number">12.2.5.</span> <span class="toc-text">搭建成功，试验一把</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%AF%BB%E5%86%99%E5%88%86%E7%A6%BB"><span class="toc-number">12.2.6.</span> <span class="toc-text">读写分离</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BB%E4%BB%8E%E5%A4%8D%E5%88%B6%E5%8E%9F%E7%90%86"><span class="toc-number">12.3.</span> <span class="toc-text">主从复制原理</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%A8%E9%87%8F%E5%A4%8D%E5%88%B6"><span class="toc-number">12.3.1.</span> <span class="toc-text">全量复制</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%85%A8%E9%87%8F%E5%A4%8D%E5%88%B6%E7%9A%84%E5%BC%80%E9%94%80"><span class="toc-number">12.3.2.</span> <span class="toc-text">全量复制的开销</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%83%A8%E5%88%86%E5%A4%8D%E5%88%B6"><span class="toc-number">12.3.3.</span> <span class="toc-text">部分复制</span></a></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E7%94%A8-redis-%EF%BC%9F%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E7%94%A8%E7%BC%93%E5%AD%98%EF%BC%9F"><span class="toc-number">13.</span> <span class="toc-text">为什么要用 redis ？为什么要用缓存？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E7%94%A8-redis-%E8%80%8C%E4%B8%8D%E7%94%A8-map-guava-%E5%81%9A%E7%BC%93%E5%AD%98"><span class="toc-number">14.</span> <span class="toc-text">为什么要用 redis 而不用 map&#x2F;guava 做缓存?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#redis-%E7%9A%84%E7%BA%BF%E7%A8%8B%E6%A8%A1%E5%9E%8B%E6%98%AF%E6%80%8E%E4%B9%88%E6%A0%B7%E7%9A%84%EF%BC%9F"><span class="toc-number">15.</span> <span class="toc-text">redis 的线程模型是怎么样的？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#redis-%E5%92%8C-memcached-%E7%9A%84%E5%8C%BA%E5%88%AB%EF%BC%9F"><span class="toc-number">16.</span> <span class="toc-text">redis 和 memcached 的区别？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E5%AE%9E%E7%8E%B0-redis-%E4%BA%8B%E5%8A%A1%EF%BC%9F"><span class="toc-number">17.</span> <span class="toc-text">如何实现 redis 事务？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF-RedLock%EF%BC%9F"><span class="toc-number">18.</span> <span class="toc-text">什么是 RedLock？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AF%B4%E8%AF%B4-Redis-%E9%83%BD%E6%9C%89%E5%93%AA%E4%BA%9B%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF%EF%BC%9F"><span class="toc-number">19.</span> <span class="toc-text">说说 Redis 都有哪些应用场景？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8D%95%E7%BA%BF%E7%A8%8B%E7%9A%84-Redis-%E4%B8%BA%E4%BB%80%E4%B9%88%E8%BF%99%E4%B9%88%E5%BF%AB%EF%BC%9F"><span class="toc-number">20.</span> <span class="toc-text">单线程的 Redis 为什么这么快？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AF%B4%E4%B8%80%E8%AF%B4-Redis-%E7%9A%84%E6%95%B0%E6%8D%AE%E8%BF%87%E6%9C%9F%E6%B7%98%E6%B1%B0%E7%AD%96%E7%95%A5%EF%BC%9F"><span class="toc-number">21.</span> <span class="toc-text">说一说 Redis 的数据过期淘汰策略？</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1%E3%80%81%E5%AE%9A%E6%9C%9F%E5%88%A0%E9%99%A4%E3%80%81%E6%83%B0%E6%80%A7%E5%88%A0%E9%99%A4%E7%AD%96%E7%95%A5%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-number">21.1.</span> <span class="toc-text">1、定期删除、惰性删除策略是什么？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2%E3%80%81%E5%AE%9A%E6%9C%9F%E5%88%A0%E9%99%A4-%E6%83%B0%E6%80%A7%E5%88%A0%E9%99%A4%E7%AD%96%E7%95%A5%E6%98%AF%E5%A6%82%E4%BD%95%E5%B7%A5%E4%BD%9C%E7%9A%84%EF%BC%9F"><span class="toc-number">21.2.</span> <span class="toc-text">2、定期删除+惰性删除策略是如何工作的？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%89%8B%E5%86%99%E4%B8%80%E4%B8%AA-LRU-%E7%AE%97%E6%B3%95"><span class="toc-number">22.</span> <span class="toc-text">手写一个 LRU 算法</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#jedis-%E5%92%8C-Redisson-%E6%9C%89%E5%93%AA%E4%BA%9B%E5%8C%BA%E5%88%AB%EF%BC%9F"><span class="toc-number">23.</span> <span class="toc-text">jedis 和 Redisson 有哪些区别？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AF%B7%E9%97%AERedis%E7%9A%84rehash%E6%80%8E%E4%B9%88%E5%81%9A%E7%9A%84%EF%BC%8C%E4%B8%BA%E4%BB%80%E4%B9%88%E8%A6%81%E6%B8%90%E8%BF%9Brehash%EF%BC%8C%E6%B8%90%E8%BF%9Brehash%E5%8F%88%E6%98%AF%E6%80%8E%E4%B9%88%E5%AE%9E%E7%8E%B0%E7%9A%84"><span class="toc-number">24.</span> <span class="toc-text">请问Redis的rehash怎么做的，为什么要渐进rehash，渐进rehash又是怎么实现的?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%AF%B7%E9%97%AERedis%E7%9A%84%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%E5%BA%95%E5%B1%82%E6%80%8E%E4%B9%88%E5%AE%9E%E7%8E%B0"><span class="toc-number">25.</span> <span class="toc-text">请问Redis的数据类型底层怎么实现?</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8A%A8%E6%80%81%E5%AD%97%E7%AC%A6%E4%B8%B2SDS"><span class="toc-number">26.</span> <span class="toc-text">动态字符串SDS</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%8F%8C%E5%90%91%E9%93%BE%E8%A1%A8"><span class="toc-number">27.</span> <span class="toc-text">双向链表</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ziplist"><span class="toc-number">28.</span> <span class="toc-text">ziplist</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%93%88%E5%B8%8C%E8%A1%A8"><span class="toc-number">29.</span> <span class="toc-text">哈希表</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#intset"><span class="toc-number">30.</span> <span class="toc-text">intset</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%B7%B3%E8%A1%A8"><span class="toc-number">31.</span> <span class="toc-text">跳表</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#redis%E4%BA%94%E7%A7%8D%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="toc-number">32.</span> <span class="toc-text">redis五种数据结构的实现</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#redis%E5%AF%B9%E8%B1%A1"><span class="toc-number">32.1.</span> <span class="toc-text">redis对象</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%97%E7%AC%A6%E4%B8%B2"><span class="toc-number">32.2.</span> <span class="toc-text">字符串</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%97%E8%A1%A8"><span class="toc-number">32.3.</span> <span class="toc-text">列表</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#hash"><span class="toc-number">32.4.</span> <span class="toc-text">hash</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#set"><span class="toc-number">32.5.</span> <span class="toc-text">set</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#zset"><span class="toc-number">32.6.</span> <span class="toc-text">zset</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%93%E5%AD%98%E9%9B%AA%E5%B4%A9"><span class="toc-number">33.</span> <span class="toc-text">缓存雪崩</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BE%E4%BE%8B"><span class="toc-number">33.1.</span> <span class="toc-text">举例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E5%8F%A5%E8%AF%9D%E6%80%BB%E7%BB%93"><span class="toc-number">33.2.</span> <span class="toc-text">一句话总结</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88"><span class="toc-number">33.3.</span> <span class="toc-text">解决方案</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%93%E5%AD%98%E7%A9%BF%E9%80%8F"><span class="toc-number">34.</span> <span class="toc-text">缓存穿透</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BE%E4%BE%8B-1"><span class="toc-number">34.1.</span> <span class="toc-text">举例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E5%8F%A5%E8%AF%9D%E6%80%BB%E7%BB%93-1"><span class="toc-number">34.2.</span> <span class="toc-text">一句话总结</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88-1"><span class="toc-number">34.3.</span> <span class="toc-text">解决方案</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%93%E5%AD%98%E5%87%BB%E7%A9%BF"><span class="toc-number">35.</span> <span class="toc-text">缓存击穿</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BE%E4%BE%8B-2"><span class="toc-number">35.1.</span> <span class="toc-text">举例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E5%8F%A5%E8%AF%9D%E6%80%BB%E7%BB%93-2"><span class="toc-number">35.2.</span> <span class="toc-text">一句话总结</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%A3%E5%86%B3%E6%96%B9%E6%A1%88-2"><span class="toc-number">35.3.</span> <span class="toc-text">解决方案</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%80%E5%90%8E%E6%80%BB%E7%BB%93"><span class="toc-number">35.4.</span> <span class="toc-text">最后总结</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%9D%E8%80%83"><span class="toc-number">35.5.</span> <span class="toc-text">思考</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8"><span class="toc-number">36.</span> <span class="toc-text">什么是布隆过滤器</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8%E7%94%A8%E9%80%94"><span class="toc-number">37.</span> <span class="toc-text">布隆过滤器用途</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8%E5%8E%9F%E7%90%86"><span class="toc-number">38.</span> <span class="toc-text">布隆过滤器原理</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AD%98%E5%85%A5%E6%95%B0%E6%8D%AE%E8%BF%87%E7%A8%8B"><span class="toc-number">38.1.</span> <span class="toc-text">存入数据过程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9F%A5%E8%AF%A2%E6%95%B0%E6%8D%AE%E8%BF%87%E7%A8%8B"><span class="toc-number">38.2.</span> <span class="toc-text">查询数据过程</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%88%A0%E9%99%A4%E6%95%B0%E6%8D%AE%E8%BF%87%E7%A8%8B"><span class="toc-number">38.3.</span> <span class="toc-text">删除数据过程</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8%E7%9A%84%E4%BC%98%E7%BC%BA%E7%82%B9"><span class="toc-number">39.</span> <span class="toc-text">布隆过滤器的优缺点</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%98%E7%82%B9"><span class="toc-number">39.1.</span> <span class="toc-text">优点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BC%BA%E7%82%B9"><span class="toc-number">39.2.</span> <span class="toc-text">缺点</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8%E6%96%B9%E5%BC%8F"><span class="toc-number">40.</span> <span class="toc-text">实现布隆过滤器方式</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8%E6%B7%B1%E5%85%A5%E5%88%86%E6%9E%90%E4%BB%A3%E7%A0%81"><span class="toc-number">41.</span> <span class="toc-text">布隆过滤器深入分析代码</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#fpp%E8%AF%AF%E5%88%A4%E7%8E%87"><span class="toc-number">41.1.</span> <span class="toc-text">fpp误判率</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%83%85%E6%99%AF%E6%80%BB%E7%BB%93"><span class="toc-number">41.2.</span> <span class="toc-text">情景总结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8%E8%A7%A3%E5%86%B3%E7%BC%93%E5%AD%98%E7%A9%BF%E9%80%8F"><span class="toc-number">42.</span> <span class="toc-text">布隆过滤器解决缓存穿透</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%99%BD%E5%90%8D%E5%8D%95%E8%A7%A3%E5%86%B3%E7%BC%93%E5%AD%98%E7%A9%BF%E9%80%8F"><span class="toc-number">42.1.</span> <span class="toc-text">白名单解决缓存穿透</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="toc-number">42.2.</span> <span class="toc-text">代码实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%BB%91%E5%90%8D%E5%8D%95%E8%A7%A3%E5%86%B3%E7%BC%93%E5%AD%98%E7%A9%BF%E9%80%8F"><span class="toc-number">42.3.</span> <span class="toc-text">黑名单解决缓存穿透</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B8%83%E9%9A%86%E8%BF%87%E6%BB%A4%E5%99%A8%E5%85%B6%E4%BB%96%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF%E4%B8%BE%E4%BE%8B"><span class="toc-number">43.</span> <span class="toc-text">布隆过滤器其他应用场景举例</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%A7%86%E9%A2%91%E6%8E%A8%E9%80%81%E5%9C%BA%E6%99%AF%EF%BC%88%E9%BB%91%E5%90%8D%E5%8D%95%EF%BC%89"><span class="toc-number">43.1.</span> <span class="toc-text">视频推送场景（黑名单）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BD%AC%E8%BD%BD%E8%A7%86%E9%A2%91-%E6%96%87%E7%AB%A0%E6%A1%88%E4%BE%8B%EF%BC%88%E7%99%BD%E5%90%8D%E5%8D%95%EF%BC%89"><span class="toc-number">43.2.</span> <span class="toc-text">转载视频&#x2F;文章案例（白名单）</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2021/06/11/MySQL%E5%9F%BA%E7%A1%80/" title="无题"><img src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="无题"/></a><div class="content"><a class="title" href="/2021/06/11/MySQL%E5%9F%BA%E7%A1%80/" title="无题">无题</a><time datetime="2021-06-10T20:43:49.432Z" title="发表于 2021-06-11 04:43:49">2021-06-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/06/11/Linux/" title="无题"><img src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="无题"/></a><div class="content"><a class="title" href="/2021/06/11/Linux/" title="无题">无题</a><time datetime="2021-06-10T20:43:49.431Z" title="发表于 2021-06-11 04:43:49">2021-06-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/06/11/java%E9%9B%86%E5%90%88/" title="无题"><img src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="无题"/></a><div class="content"><a class="title" href="/2021/06/11/java%E9%9B%86%E5%90%88/" title="无题">无题</a><time datetime="2021-06-10T20:43:49.430Z" title="发表于 2021-06-11 04:43:49">2021-06-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/06/11/java%E5%9F%BA%E7%A1%80/" title="无题"><img src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="无题"/></a><div class="content"><a class="title" href="/2021/06/11/java%E5%9F%BA%E7%A1%80/" title="无题">无题</a><time datetime="2021-06-10T20:43:49.429Z" title="发表于 2021-06-11 04:43:49">2021-06-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/06/11/javaWeb/" title="无题"><img src="https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="无题"/></a><div class="content"><a class="title" href="/2021/06/11/javaWeb/" title="无题">无题</a><time datetime="2021-06-10T20:43:49.427Z" title="发表于 2021-06-11 04:43:49">2021-06-11</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url('https://i.loli.net/2020/05/01/gkihqEjXxJ5UZ1C.jpg')"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021 By sry king</div><div class="footer_custom_text"><a target="_blank" rel="noopener" href="https://solomid.top/">Hi, welcome to my blog!</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="translateLink" type="button" title="简繁转换">繁</button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/tw_cn.js"></script><script src="/js/search/local-search.js"></script><script>var preloader = {
+  endLoading: () => {
+    document.body.style.overflow = 'auto';
+    document.getElementById('loading-box').classList.add("loaded")
+  },
+  initLoading: () => {
+    document.body.style.overflow = '';
+    document.getElementById('loading-box').classList.remove("loaded")
+
+  }
+}
+window.addEventListener('load',preloader.endLoading())</script><div class="js-pjax"><script>if (document.getElementsByClassName('mermaid').length) {
+  if (window.mermaidJsLoad) mermaid.init()
+  else {
+    getScript('https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js').then(() => {
+      window.mermaidJsLoad = true
+      mermaid.initialize({
+        theme: 'default',
+      })
+      true && mermaid.init()
+    })
+  }
+}</script><script>function loadValine () {
+  function initValine () {
+    let initData = {
+      el: '#vcomment',
+      appId: '9084qsPkM6kcsqP6rOwh13sv-gzGzoHsz',
+      appKey: 'L61Kc0kakxBNQLfPvNq4RfH2',
+      placeholder: '記得留下你的昵称和邮箱....可以快速收到回復',
+      avatar: 'monsterid',
+      meta: 'nick,mail,link'.split(','),
+      pageSize: '10',
+      lang: 'zh-CN',
+      recordIP: false,
+      serverURLs: '',
+      emojiCDN: '',
+      emojiMaps: "",
+      enableQQ: false,
+      path: window.location.pathname,
+    }
+
+    if (true) { 
+      initData.requiredFields= ('nick,mail'.split(','))
+    }
+    
+    if (false) {
+      const otherData = false
+      initData = Object.assign(initData, otherData)
+    }
+    
+    const valine = new Valine(initData)
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !false) {
+  if (false) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script></div><script src="https://cdn.jsdelivr.net/npm/blueimp-md5@2.17.0/js/md5.min.js"></script><script>window.addEventListener('load', () => {
+  const changeContent = (content) => {
+    if (content === '') return content
+
+    content = content.replace(/<img.*?src="(.*?)"?[^\>]+>/ig, '[图片]') // replace image link
+    content = content.replace(/<a[^>]+?href=["']?([^"']+)["']?[^>]*>([^<]+)<\/a>/gi, '[链接]') // replace url
+    content = content.replace(/<pre><code>.*?<\/pre>/gi, '[代码]') // replace code
+    content = content.replace(/<[^>]+>/g,"") // remove html tag
+
+    if (content.length > 150) {
+      content = content.substring(0,150) + '...'
+    }
+    return content
+  }
+
+  const getIcon = (icon, mail) => {
+    if (icon) return icon
+    let defaultIcon = '?d=monsterid'
+    let iconUrl = `https://gravatar.loli.net/avatar/${md5(mail.toLowerCase()) + defaultIcon}`
+    return iconUrl
+  }
+
+  const generateHtml = array => {
+    let result = ''
+
+    if (array.length) {
+      for (let i = 0; i < array.length; i++) {
+        result += '<div class=\'aside-list-item\'>'
+
+        if (true) {
+          const name = 'src'
+          result += `<a href='${array[i].url}' class='thumbnail'><img ${name}='${array[i].avatar}' alt='${array[i].nick}'></a>`
+        }
+
+        result += `<div class='content'>
+        <a class='comment' href='${array[i].url}'>${array[i].content}</a>
+        <div class='name'><span>${array[i].nick} / </span><time datetime="${array[i].date}">${btf.diffDate(array[i].date, true)}</time></div>
+        </div></div>`
+      }
+    } else {
+      result += '没有评论'
+    }
+
+    let $dom = document.querySelector('#card-newest-comments .aside-list')
+    $dom.innerHTML= result
+    window.lazyLoadInstance && window.lazyLoadInstance.update()
+    window.pjax && window.pjax.refresh($dom)
+  }
+
+  const getComment = () => {
+    const serverURL = 'https://9084qsPk.api.lncldglobal.com'
+
+    var settings = {
+      "method": "GET",
+      "headers": {
+        "X-LC-Id": '9084qsPkM6kcsqP6rOwh13sv-gzGzoHsz',
+        "X-LC-Key": 'L61Kc0kakxBNQLfPvNq4RfH2',
+        "Content-Type": "application/json"
+      },
+    }
+
+    fetch(`${serverURL}/1.1/classes/Comment?limit=6&order=-createdAt`,settings)
+      .then(response => response.json())
+      .then(data => {
+        const valineArray = data.results.map(function (e) {
+          return {
+            'avatar': getIcon(e.QQAvatar, e.mail),
+            'content': changeContent(e.comment),
+            'nick': e.nick,
+            'url': e.url + '#' + e.objectId,
+            'date': e.updatedAt,
+          }
+        })
+        saveToLocal.set('valine-newest-comments', JSON.stringify(valineArray), 10/(60*24))
+        generateHtml(valineArray)
+      }).catch(e => {
+        const $dom = document.querySelector('#card-newest-comments .aside-list')
+        $dom.innerHTML= "无法获取评论，请确认相关配置是否正确"
+      }) 
+  }
+
+  const newestCommentInit = () => {
+    if (document.querySelector('#card-newest-comments .aside-list')) {
+      const data = saveToLocal.get('valine-newest-comments')
+      if (data) {
+        generateHtml(JSON.parse(data))
+      } else {
+        getComment()
+      }
+    }
+  }
+
+  newestCommentInit()
+  document.addEventListener('pjax:complete', newestCommentInit)
+})</script><div class="aplayer no-destroy" data-id="7925622556" data-server="tencent" data-type="playlist" data-fixed="true" data-mini="true" data-listFolded="false" data-order="random" data-preload="none" data-autoplay="false" muted></div><script defer="defer" id="fluttering_ribbon" mobile="false" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-fluttering-ribbon.min.js"></script><script id="canvas_nest" defer="defer" color="0,0,255" opacity="0.7" zIndex="-1" count="99" mobile="true" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/canvas-nest.min.js"></script><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = true;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-show-text" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1/dist/click-show-text.min.js" data-mobile="true" data-text="富强,民主,文明,和谐,自由,平等,公正,法治,爱国,敬业,诚信,友善" data-fontsize="15px" data-random="false" async="async"></script><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/aplayer/dist/APlayer.min.js"></script><script src="https://cdn.jsdelivr.net/gh/metowolf/MetingJS@1.2/dist/Meting.min.js"></script><script src="https://cdn.jsdelivr.net/npm/pjax/pjax.min.js"></script><script>let pjaxSelectors = [
+  'title',
+  '#config-diff',
+  '#body-wrap',
+  '#rightside-config-hide',
+  '#rightside-config-show',
+  '.js-pjax'
+]
+
+if (false) {
+  pjaxSelectors.unshift('meta[property="og:image"]', 'meta[property="og:title"]', 'meta[property="og:url"]')
+}
+
+var pjax = new Pjax({
+  elements: 'a:not([target="_blank"])',
+  selectors: pjaxSelectors,
+  cacheBust: false,
+  analytics: false,
+  scrollRestoration: false
+})
+
+document.addEventListener('pjax:complete', function () {
+  window.refreshFn()
+
+  document.querySelectorAll('script[data-pjax]').forEach(item => {
+    const newScript = document.createElement('script')
+    const content = item.text || item.textContent || item.innerHTML || ""
+    Array.from(item.attributes).forEach(attr => newScript.setAttribute(attr.name, attr.value))
+    newScript.appendChild(document.createTextNode(content))
+    item.parentNode.replaceChild(newScript, item)
+  })
+
+  GLOBAL_CONFIG.islazyload && window.lazyLoadInstance.update()
+
+  typeof chatBtnFn === 'function' && chatBtnFn()
+  typeof panguInit === 'function' && panguInit()
+
+  if (typeof gtag === 'function') {
+    gtag('config', '', {'page_path': window.location.pathname});
+  }
+
+  typeof loadMeting === 'function' && document.getElementsByClassName('aplayer').length && loadMeting()
+
+  // Analytics
+  if (false) {
+    MtaH5.pgv()
+  }
+
+  // prismjs
+  typeof Prism === 'object' && Prism.highlightAll()
+
+  typeof preloader === 'object' && preloader.endLoading()
+})
+
+
+document.addEventListener('pjax:send', function () {
+  typeof preloader === 'object' && preloader.initLoading()
+  
+  if (window.aplayers) {
+    for (let i = 0; i < window.aplayers.length; i++) {
+      if (!window.aplayers[i].options.fixed) {
+        window.aplayers[i].destroy()
+      }
+    }
+  }
+
+  typeof typed === 'object' && typed.destroy()
+
+  //reset readmode
+  const $bodyClassList = document.body.classList
+  $bodyClassList.contains('read-mode') && $bodyClassList.remove('read-mode')
+
+})
+
+document.addEventListener('pjax:error', (e) => {
+  if (e.request.status === 404) {
+    pjax.loadUrl('/404.html')
+  }
+})</script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><script src="/live2dw/lib/L2Dwidget.min.js?094cbace49a39548bed64abff5988b05"></script><script>L2Dwidget.init({"pluginRootPath":"live2dw/","pluginJsPath":"lib/","pluginModelPath":"assets/","tagMode":false,"debug":false,"model":{"jsonPath":"/live2dw/assets/nipsilon.model.json"},"display":{"position":"right","width":240,"height":430},"mobile":{"show":true},"log":false});</script></body></html>
